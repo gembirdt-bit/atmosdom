@@ -64,4 +64,4 @@ HTML, CSS i JavaScript bez okvira, Service Worker, Web App Manifest, Web Share A
 
 ## Licenca
 
-Autor može da doda licencu po izboru (npr. MIT) u fajl `LICENSE`.
+Aplikaciju moižete slobodno koristiti uz uslov da ostavite credits link ka autoru - ako radite clone.
