@@ -78,11 +78,16 @@ footer{text-align:center;color:var(--muted);font-size:.75rem;padding:16px}
 .scban{border:1px dashed var(--acc);border-radius:12px;padding:10px;margin:-4px 0 12px}.scban .small{margin-bottom:8px}
 .scbar{height:8px;border-radius:6px;background:var(--card2);overflow:hidden;margin:14px 0 6px}.scbar i{display:block;height:100%;width:0;background:var(--acc);transition:width .2s}
 details.raw{margin:0 0 12px;font-size:.8rem;color:var(--muted)}details.raw pre{white-space:pre-wrap;max-height:140px;overflow:auto;background:var(--card2);padding:8px;border-radius:8px}
+nav .sec{display:none}
+.more{display:grid;gap:10px}.more button{display:flex;align-items:center;gap:12px;padding:16px;text-align:left;font-size:1rem}
+.calcd{background:var(--card2);border-radius:12px;padding:12px;text-align:right;min-height:78px;margin-bottom:10px}.calce{font-size:1.5rem;word-break:break-all;min-height:1.9rem}.calcr{color:var(--muted);font-size:1rem;min-height:1.3rem}
+.calck{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.calck button{padding:14px 0;font-size:1.1rem}.calck .op{color:var(--acc);font-weight:700}
 @media(max-width:560px){.g4{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr}}
 @media(min-width:900px){
  body{padding-bottom:30px;padding-left:200px}
- nav{top:0;bottom:auto;width:200px;right:auto;flex-direction:column;border-top:0;border-right:1px solid var(--line);padding:70px 8px 8px}
+ nav{top:0;bottom:0;width:200px;right:auto;flex-direction:column;border-top:0;border-right:1px solid var(--line);padding:70px 8px 8px;overflow-y:auto;gap:2px}
  nav button{flex:none;flex-direction:row;height:46px;font-size:.95rem;gap:12px;padding:0 14px;justify-content:flex-start;border-radius:12px}
+ nav .sec{display:flex}nav .morebtn{display:none}
  .top{margin-left:-200px;padding-left:212px}
  .fab{bottom:24px;right:24px}.toast{bottom:30px}
 }
@@ -91,7 +96,14 @@ details.raw{margin:0 0 12px;font-size:.8rem;color:var(--muted)}details.raw pre{w
  body{background:#fff;color:#000;padding:0}.card,.item,.stat{background:#fff;color:#000;border-color:#bbb}.muted{color:#444}
  :root{--txt:#000;--muted:#444;--card:#fff;--card2:#eee}
 }
-</style>
+.coffee-ov{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:9999;padding:16px}.coffee-ov.open{display:flex}
+.coffee-box{background:var(--card);color:var(--txt);border:1px solid var(--line);border-radius:18px;max-width:380px;width:100%;max-height:92vh;overflow:auto;padding:22px;text-align:center;font-size:.92rem;line-height:1.5;position:relative}
+.coffee-box h3{margin:0 0 10px;font-size:1.1rem;display:block}.coffee-box p{margin:8px 0}
+.coffee-acc{display:inline-block;margin:6px 0;padding:6px 12px;border-radius:10px;background:var(--card2);font-variant-numeric:tabular-nums;letter-spacing:.5px;user-select:all}
+.coffee-qr{width:200px;height:200px;margin:12px auto 4px;background:#fff;border-radius:10px;padding:6px}
+.coffee-x{position:absolute;top:6px;right:10px;width:auto;background:none;border:0;color:var(--txt);font-size:1.6rem;cursor:pointer;line-height:1;padding:4px 8px}
+.coffee-amts{display:flex;gap:6px;justify-content:center;margin-top:12px}.coffee-amts button{width:auto;padding:6px 12px;border-radius:10px;border:1px solid rgba(128,128,128,.45);background:rgba(128,128,128,.15);color:inherit;font:inherit;font-size:.85em;cursor:pointer}.coffee-amts button.on{background:var(--acc);border-color:var(--acc);color:#fff}.coffee-qrv svg{width:100%;height:100%;display:block}.coffee-qrv[hidden]{display:none}
+.coffee-mini{display:inline-block;width:auto;margin-top:8px;padding:5px 12px;font-size:.75rem;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--txt);cursor:pointer}</style>
 </head>
 <body>
 <div class="top"><div class="top-in">
@@ -100,14 +112,21 @@ details.raw{margin:0 0 12px;font-size:.8rem;color:var(--muted)}details.raw pre{w
   <button id="scanBtn" title="Skeniraj račun">📷</button>
 </div></div>
 <main class="shell" id="view"></main>
-<footer>Atmos Dom · podaci su samo na ovom uređaju</footer>
+<footer>Atmos Dom · podaci su samo na ovom uređaju<br><button class="coffee-mini" onclick="coffeeOpen()" type="button">☕ Doniraj autoru</button></footer>
 <button class="fab" id="fab" aria-label="Dodaj">+</button>
 <nav id="nav">
   <button data-tab="pregled"><span>🏠</span>Pregled</button>
   <button data-tab="racuni"><span>🧾</span>Računi</button>
   <button data-tab="rokovi"><span>📅</span>Rokovi</button>
+  <button data-tab="podsetnici" class="sec"><span>⏰</span>Podsetnici</button>
+  <button data-tab="clanarine" class="sec"><span>🏷️</span>Članarine</button>
+  <button data-tab="garancije" class="sec"><span>🛠️</span>Garancije</button>
+  <button data-tab="beleske" class="sec"><span>📝</span>Beleške</button>
   <button data-tab="izvestaji"><span>📊</span>Izveštaji</button>
-  <button data-tab="podesavanja"><span>⚙️</span>Podešavanja</button>
+  <button data-tab="kalkulator" class="sec"><span>🧮</span>Kalkulator</button>
+  <button data-tab="kurs" class="sec"><span>💱</span>Kursna lista</button>
+  <button data-tab="podesavanja" class="sec"><span>⚙️</span>Podešavanja</button>
+  <button data-tab="vise" class="morebtn"><span>☰</span>Više</button>
 </nav>
 <dialog id="dlg"><form class="dlg" id="dlgForm" method="dialog"></form></dialog>
 <dialog id="scanDlg"><div class="dlg" id="scanBody"></div></dialog>
@@ -134,23 +153,26 @@ const CATS=[['Struja','⚡'],['Voda i komunalije','🚰'],['Grejanje','♨️'],
 const CN=CATS.map(c=>c[0]),CI=Object.fromEntries(CATS);
 const CC=['#f59e0b','#38bdf8','#fb7185','#f97316','#a78bfa','#22d3ee','#34d399','#e879f9','#94a3b8','#60a5fa','#facc15','#4ade80','#9ca3af'];
 const catColor=c=>CC[Math.max(0,CN.indexOf(c))]||CC[12];
-const KINDS=[['Dokument','🪪'],['Garancija','🛠️'],['Članarina','🏷️'],['Važan datum','⭐'],['Podsetnik','🔔']];
+const KINDS=[['Dokument','🪪'],['Garancija','🛠️'],['Članarina','🏷️'],['Pretplata','🔁'],['Važan datum','⭐'],['Podsetnik','🔔']];
 const KI=Object.fromEntries(KINDS);
+const CURS=['EUR','USD','CHF','GBP','BAM','RON','HUF'];
+const DEFRATES={EUR:117.2,USD:100.5,CHF:125,GBP:137,BAM:59.9,RON:23.5,HUF:0.3};
+const curOpts=()=>['RSD',...CURS].map(c=>[c,c]);
 const ACCS=['#0f9d78','#0ea5e9','#f59e0b','#ef4444','#8b5cf6','#ec4899','#64748b'];
 const UCOL=['#0f9d78','#0ea5e9','#f59e0b','#ef4444','#8b5cf6','#ec4899','#14b8a6','#64748b'];
 const RECUR=[['','Ne ponavlja se'],['1','Svaki mesec'],['2','Na 2 meseca'],['3','Na 3 meseca'],['6','Na 6 meseci'],['12','Svake godine']];
 
 /* ---------- PODACI ---------- */
 function fresh(){const u={id:uid(),name:'Ja',color:UCOL[0]};
-  return{v:1,settings:{theme:'auto',accent:ACCS[0],cur:'RSD',eurRate:117.2,warnDays:7,fs:'m',notif:false,lastNotif:'',period:'1m',backupDays:7,lastExport:'',snapKeep:7},
-  users:[u],filter:'all',bills:[],dates:[]}}
-function norm(d){const f=fresh();d.settings=Object.assign(f.settings,d.settings||{});d.users=(d.users&&d.users.length)?d.users:f.users;d.bills=d.bills||[];d.dates=d.dates||[];d.filter=d.filter||'all';return d}
+  return{v:1,settings:{theme:'auto',accent:ACCS[0],cur:'RSD',rates:Object.assign({},DEFRATES),ratesDate:'',budget:0,warnDays:7,fs:'m',notif:false,lastNotif:'',period:'1m',backupDays:7,lastExport:'',snapKeep:7},
+  users:[u],filter:'all',bills:[],dates:[],notes:[],reminders:[]}}
+function norm(d){const f=fresh(),sv=d.settings||{};d.settings=Object.assign(f.settings,sv);d.settings.rates=Object.assign({},DEFRATES,(sv.eurRate&&!sv.rates)?{EUR:sv.eurRate}:{},sv.rates||{});d.users=(d.users&&d.users.length)?d.users:f.users;d.bills=d.bills||[];d.dates=d.dates||[];d.notes=d.notes||[];d.reminders=d.reminders||[];d.filter=d.filter||'all';return d}
 function load(){try{const r=JSON.parse(localStorage.getItem(KEY));if(r&&r.users)return norm(r)}catch{}return fresh()}
 let db=load();
 const S=()=>db.settings;
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(db))}catch{toast('Greška pri čuvanju (memorija puna?)')}syncAlerts()};
 const getSnaps=()=>{try{return JSON.parse(localStorage.getItem(SNAP))||[]}catch{return[]}};
-const hasData=()=>db.bills.length||db.dates.length;
+const hasData=()=>db.bills.length||db.dates.length||db.notes.length||db.reminders.length;
 function takeSnap(reason,force){try{if(!hasData())return;const a=getSnaps(),day=todayStr();if(!force&&a.length&&a[0].day===day)return;
   a.unshift({t:new Date().toISOString(),day,reason:reason||'automatski',data:JSON.stringify(db)});
   const keep=Math.max(1,Math.min(20,num(S().snapKeep)||7));while(a.length>keep)a.pop();
@@ -159,18 +181,69 @@ function restoreSnap(i){const s=getSnaps()[i];if(!s)return;
   if(!confirm('Vratiti podatke iz kopije od '+new Date(s.t).toLocaleString('sr-RS')+'? Trenutno stanje se prvo sačuva.'))return;
   const t=s.t;takeSnap('pre-vraćanja',true);const src=getSnaps().find(x=>x.t===t)||s;db=norm(JSON.parse(src.data));save();go('pregled');toast('Podaci vraćeni ✔')}
 const userById=id=>db.users.find(u=>u.id===id);
-const toBase=(a,c)=>c==='EUR'&&S().cur!=='EUR'?a*S().eurRate:(c==='RSD'&&S().cur==='EUR'?a/S().eurRate:a);
-const money=(n,cur)=>{cur=cur||S().cur;return (cur==='EUR'?Math.round(n*100)/100:Math.round(n)).toLocaleString('sr-RS',{maximumFractionDigits:cur==='EUR'?2:0})+' '+cur};
+const rsdPer=c=>!c||c==='RSD'?1:(num(S().rates[c])||1);
+const toBase=(a,c)=>(!c||c===S().cur)?a:a*rsdPer(c)/rsdPer(S().cur);
+const money=(n,cur)=>{cur=cur||S().cur;const dec=(cur==='RSD'||cur==='HUF')?0:2;return (Math.round(n*Math.pow(10,dec))/Math.pow(10,dec)).toLocaleString('sr-RS',{maximumFractionDigits:dec})+' '+cur};
 const fmtDate=s=>{if(!s)return'—';const p=s.split('-');return p.length===3?`${p[2]}.${p[1]}.${p[0]}.`:s};
 const defUser=()=>db.filter!=='all'&&userById(db.filter)?db.filter:db.users[0].id;
 const userOK=x=>db.filter==='all'||x.user===db.filter;
 const bAmt=b=>toBase(num(b.amount),b.cur);
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2600)}
 function download(name,text,mime){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:mime}));a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+const APP_VERSION='1.0',PRE='atmosDom1_preupdate';
+const countAll=d=>d.users.length+d.bills.length+d.dates.length+d.notes.length+d.reminders.length;
+async function fetchRemoteVersion(){
+  const r=await fetch(location.href.split('#')[0].split('?')[0],{cache:'no-store'});
+  if(!r.ok)throw new Error('http '+r.status);
+  const m=(await r.text()).match(/APP_VERSION\s*=\s*'([^']+)'/);
+  return m?m[1]:null;
+}
+async function checkUpdate(silent){
+  if(!navigator.onLine){if(!silent)toast('Nema internet veze');return}
+  try{
+    const rv=await fetchRemoteVersion();
+    try{const reg=await navigator.serviceWorker?.getRegistration();reg&&reg.update()}catch{}
+    if(!rv){if(!silent)toast('Ne mogu da pročitam verziju sa servera');return}
+    S().lastUpdCheck=todayStr();
+    try{localStorage.setItem(KEY,JSON.stringify(db))}catch{}
+    if(rv!==APP_VERSION){
+      ui.upd=rv;render();
+      if(silent)toast('Dostupna je nova verzija '+rv+' — Podešavanja → Ažuriranje');
+      else if(confirm(`Dostupna je verzija ${rv} (imaš ${APP_VERSION}). Ažurirati sada?\n\nPre toga se čuva interna kopija i preuzima izvoz, a posle ažuriranja se podaci proveravaju i po potrebi vraćaju.`))doUpdate();
+    }else{ui.upd=null;if(!silent){toast(`Imaš najnoviju verziju (${APP_VERSION}) ✔`);render()}}
+  }catch(e){if(!silent)toast('Provera nije uspela (nema mreže ili aplikacija nije postavljena na server)')}
+}
+async function doUpdate(){
+  try{
+    takeSnap('pre-ažuriranja',true);
+    localStorage.setItem(PRE,JSON.stringify({t:new Date().toISOString(),from:APP_VERSION,n:countAll(db),data:JSON.stringify(db)}));
+    S().lastExport=todayStr();
+    try{localStorage.setItem(KEY,JSON.stringify(db))}catch{}
+    download(`atmos_dom_pre_azuriranja_${todayStr()}.json`,JSON.stringify(db,null,2),'application/json');
+    toast('Kopija sačuvana, ažuriram…');
+    await new Promise(r=>setTimeout(r,1500));
+    if('serviceWorker' in navigator){const regs=await navigator.serviceWorker.getRegistrations();await Promise.all(regs.map(r=>r.unregister()))}
+    if(window.caches){const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}
+    await fetch(location.href.split('#')[0],{cache:'reload'}).catch(()=>{});
+    location.reload();
+  }catch(e){toast('Ažuriranje nije uspelo: '+(e.message||e))}
+}
+function verifyAfterUpdate(){
+  try{
+    const raw=localStorage.getItem(PRE);if(!raw)return;
+    const pre=JSON.parse(raw);localStorage.removeItem(PRE);
+    if(countAll(db)<pre.n){
+      db=norm(JSON.parse(pre.data));
+      localStorage.setItem(KEY,JSON.stringify(db));
+      setTimeout(()=>toast('Podaci vraćeni iz kopije pre ažuriranja ✔'),800);
+    }else setTimeout(()=>toast(`Ažurirano na ${APP_VERSION} · podaci provereni (${countAll(db)} stavki) ✔`),800);
+  }catch{}
+}
 
 /* ---------- PERIOD ---------- */
 const PERIODS=[['1m','Mesec'],['3m','3 meseca'],['6m','6 meseci'],['12m','Godina']];
-let ui={tab:'pregled',q:'',cat:'',st:'all',off:0};
+let ui={tab:'pregled',q:'',cat:'',st:'all',off:0,calc:{expr:''},cv:{a:'100',f:'EUR',t:'RSD'}};
+const SEC=['vise','podsetnici','beleske','clanarine','garancije','kalkulator','kurs','podesavanja'];
 const PN=()=>({'1m':1,'3m':3,'6m':6,'12m':12}[S().period]||1);
 function rangeOf(off){
   const N=PN(),now=new Date(),endIdx=now.getFullYear()*12+now.getMonth()-off*N,startIdx=endIdx-(N-1);
@@ -199,6 +272,7 @@ function alerts(){
   const out=[];
   db.bills.filter(b=>!b.paid&&b.due&&userOK(b)).forEach(b=>{const s=billStat2(b);if(s.lvl==='bad'||s.lvl==='warn')out.push({lvl:s.lvl,ic:CI[b.cat]||'🧾',text:`${b.title}: ${money(num(b.amount),b.cur)} — ${s.badge.toLowerCase()}`,d:dayDiff(b.due)})});
   db.dates.filter(x=>!x.done&&x.date&&userOK(x)).forEach(x=>{const s=dateStat(x.date,dateWarn(x));if(s.lvl==='bad'||s.lvl==='warn')out.push({lvl:s.lvl,ic:KI[x.kind]||'🔔',text:`${x.title}: ${s.lvl==='bad'?s.badge.toLowerCase():'ističe '+(s.d===0?'danas':'za '+s.d+' d')}`,d:s.d})});
+  db.reminders.filter(x=>!x.done&&x.date&&userOK(x)).forEach(x=>{const s=dateStat(x.date,1);if(s.lvl==='bad'||s.lvl==='warn')out.push({lvl:s.lvl,ic:'⏰',text:`${x.title}: ${s.lvl==='bad'?'kasni '+(-s.d)+' d':(s.d===0?'danas'+(x.time?' u '+x.time:''):'sutra'+(x.time?' u '+x.time:''))}`,d:s.d})});
   return out.sort((a,b)=>lvlOrder[a.lvl]-lvlOrder[b.lvl]||a.d-b.d);
 }
 function updateBadge(){try{if(!navigator.setAppBadge)return;const n=alerts().length;n?navigator.setAppBadge(n):navigator.clearAppBadge()}catch{}}
@@ -215,11 +289,12 @@ function go(t){ui.tab=t;ui.q='';ui.cat='';render();window.scrollTo(0,0)}
 function render(){
   applyTheme();
   $('userSel').innerHTML='<option value="all">👥 Svi članovi</option>'+db.users.map(u=>`<option value="${u.id}" ${u.id===db.filter?'selected':''}>${esc(u.name)}</option>`).join('');
-  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.tab===ui.tab));
-  $('fab').style.display=['racuni','rokovi','pregled'].includes(ui.tab)?'block':'none';
+  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.tab===ui.tab||(b.dataset.tab==='vise'&&SEC.includes(ui.tab)&&window.innerWidth<900)));
+  $('fab').style.display=['racuni','rokovi','pregled','clanarine','garancije','podsetnici','beleske'].includes(ui.tab)?'block':'none';
   updateBadge();
-  const pages={pregled:pgPregled,racuni:pgRacuni,rokovi:pgRokovi,izvestaji:pgIzvestaji,podesavanja:pgPodesavanja};
+  const pages={pregled:pgPregled,racuni:pgRacuni,rokovi:pgRokovi,podsetnici:pgPodsetnici,beleske:pgBeleske,clanarine:pgClanarine,garancije:pgGarancije,izvestaji:pgIzvestaji,kalkulator:pgKalkulator,kurs:pgKurs,vise:pgVise,podesavanja:pgPodesavanja};
   $('view').innerHTML=pages[ui.tab]();
+  if(ui.tab==='kalkulator'){calcUpd();updTools()}if(ui.tab==='kurs')updCv();
 }
 const periodBar=()=>`<div class="seg noprint" style="margin-bottom:10px">${PERIODS.map(([k,l])=>`<button data-set="period" data-val="${k}" class="${S().period===k?'on':''}">${l}</button>`).join('')}</div>`;
 const periodNav=r=>`<div class="pnav noprint"><button class="btn-s" data-act="off" data-d="1">‹</button><div class="lbl">${esc(r.label)}</div><button class="btn-s" data-act="off" data-d="-1" ${ui.off<=0?'disabled style="opacity:.4"':''}>›</button></div>`;
@@ -249,6 +324,7 @@ function pgPregled(){
   <div class="card hero"><div class="n">${esc(r.label)} · ${db.filter==='all'?'svi članovi':esc((userById(db.filter)||{}).name||'')}</div>
     <div class="big">${money(total)}</div><div class="p">ukupni troškovi ${deltaHtml(total,sumB(prev)).replace(/class="delta (up|dn)"/,'style="color:#fff"')} ${sumB(prev)?'u odnosu na prethodni period':''}</div></div>
   ${periodBar()}${periodNav(r)}
+  ${budgetCard(total,r)}
   ${al.length?`<div class="card"><h3>⚠️ Zahteva pažnju</h3>${al.slice(0,6).map(a=>`<div class="alert ${a.lvl}"><span>${a.ic}</span><span>${esc(a.text)}</span></div>`).join('')}</div>`:''}
   <div class="row wrap noprint" style="margin-bottom:12px"><button class="btn-p grow" data-act="add" data-t="racun">🧾 Novi račun</button><button class="btn-p grow" data-act="add" data-t="rok">📅 Novi rok</button></div>
   <div class="grid g4" style="margin-bottom:12px">
@@ -328,12 +404,17 @@ function pgPodesavanja(){
     <label class="l">Tema</label><div class="seg" style="margin-bottom:12px">${[['dark','Tamna'],['light','Svetla'],['auto','Auto']].map(([k,l])=>`<button data-set="theme" data-val="${k}" class="${s.theme===k?'on':''}">${l}</button>`).join('')}</div>
     <label class="l">Boja akcenta</label><div class="sw" style="margin-bottom:12px">${ACCS.map(c=>`<button data-set="accent" data-val="${c}" style="background:${c}" class="${s.accent===c?'on':''}" aria-label="${c}"></button>`).join('')}</div>
     <label class="l">Veličina teksta</label><div class="seg">${[['s','Manji'],['m','Normalan'],['l','Veći']].map(([k,l])=>`<button data-set="fs" data-val="${k}" class="${s.fs===k?'on':''}">${l}</button>`).join('')}</div></div>
-  <div class="card"><h3>🌍 Valuta</h3><div class="grid g2"><div><label class="l">Glavna valuta</label><select class="fld" data-cfg="cur">${['RSD','EUR'].map(c=>`<option ${c===s.cur?'selected':''}>${c}</option>`).join('')}</select></div><div><label class="l">Kurs 1 EUR = ? RSD</label><input class="fld" type="number" step="0.1" data-cfg="eurRate" value="${s.eurRate}"></div></div></div>
+  <div class="card"><h3>🌍 Valuta i budžet</h3><div class="grid g2" style="margin-bottom:10px"><div><label class="l">Glavna valuta</label><select class="fld" data-cfg="cur">${['RSD','EUR'].map(c=>`<option ${c===s.cur?'selected':''}>${c}</option>`).join('')}</select></div><div><label class="l">Mesečni budžet (0 = isključen)</label><input class="fld" type="number" inputmode="decimal" data-cfg="budget" value="${s.budget||0}"></div></div>
+    <button data-tab="kurs" style="width:100%">💱 Kursna lista i konverter</button></div>
   <div class="card"><h3>🔔 Podsetnici</h3>
     <label class="l">Upozori račune X dana pre roka</label><input class="fld" type="number" data-cfg="warnDays" value="${s.warnDays}" style="margin-bottom:10px">
     <button id="notifBtn" style="width:100%;margin-bottom:8px">${s.notif?'🔕 Isključi obaveštenja':'🔔 Uključi obaveštenja'}</button>
     <button data-act="testnotif" style="width:100%">🧪 Probno obaveštenje</button>
     <div class="small muted" style="margin-top:8px">Obaveštenje stiže kada otvoriš aplikaciju. Na ikonici se prikazuje broj stavki koje traže pažnju, gde je to podržano.</div></div>
+  <div class="card"><h3>🔄 Ažuriranje aplikacije</h3>
+    <div class="small muted" style="margin-bottom:10px">Instalirana verzija: <b>${APP_VERSION}</b>${ui.upd?` · dostupna: <b>${esc(ui.upd)}</b>`:''}. Pri ažuriranju se automatski čuva interna kopija i na uređaj se preuzima izvoz (JSON), pa se učitava nova verzija, a podaci se proveravaju i po potrebi vraćaju.</div>
+    <div class="row"><button class="grow" data-act="checkupd">🔍 Proveri ažuriranje</button>${ui.upd?`<button class="btn-p grow" data-act="doupd">⬆ Ažuriraj na ${esc(ui.upd)}</button>`:''}</div>
+  </div>
   <div class="card"><h3>🛡️ Podaci i rezervne kopije</h3>
     <div class="grid g2" style="margin-bottom:10px"><div><label class="l">Podsetnik za izvoz</label><select class="fld" data-cfg="backupDays" data-n="1">${[[0,'Isključen'],[7,'Nedeljno'],[14,'Na 2 nedelje'],[30,'Mesečno']].map(([k,l])=>`<option value="${k}" ${num(s.backupDays)===k?'selected':''}>${l}</option>`).join('')}</select></div>
     <div><label class="l">Interne kopije</label><select class="fld" data-cfg="snapKeep" data-n="1">${[3,5,7,10,20].map(k=>`<option value="${k}" ${num(s.snapKeep)===k?'selected':''}>${k}</option>`).join('')}</select></div></div>
@@ -341,7 +422,11 @@ function pgPodesavanja(){
     <div class="grid g2" style="margin-bottom:8px"><button data-act="export">⬇ Izvezi (JSON)</button><button data-act="import">⬆ Uvezi</button><button data-act="csv">📑 Izvezi CSV</button><button onclick="window.print()">🖨️ Štampaj</button></div>
     <div class="small muted" style="margin-bottom:10px">Poslednji izvoz: ${s.lastExport?fmtDate(s.lastExport):'nikad'}. Uvoz može da spoji podatke sa postojećim (korisno za deljenje između članova).</div>
     ${sn.length?`<label class="l">Interne kopije</label>${sn.map((x,i)=>`<div class="row sp small" style="padding:6px 0;border-bottom:1px solid var(--line)"><span>${new Date(x.t).toLocaleString('sr-RS',{dateStyle:'short',timeStyle:'short'})} <span class="muted">· ${esc(x.reason)}</span></span><button class="btn-s" data-act="restore" data-i="${i}">Vrati</button></div>`).join('')}<div style="height:10px"></div>`:''}
-    <button class="btn-d" data-act="reset" style="width:100%">⚠️ Obriši sve podatke</button></div>`;
+    <button class="btn-d" data-act="reset" style="width:100%">⚠️ Obriši sve podatke</button></div>
+  <div class="card"><h3>☕ Podrži autora</h3>
+    <div class="small muted" style="margin-bottom:10px">Ako ti se aplikacija sviđa, možeš da častiš autora kafom.</div>
+    <button class="btn-p" style="width:100%" onclick="coffeeOpen()" type="button">☕ Plati mi kafu</button>
+  </div>`;
 }
 function backupDue(){const n=num(S().backupDays);if(!n||!hasData())return false;const e=S().lastExport;return!e||-dayDiff(e)>=n}
 
@@ -352,7 +437,7 @@ const FORMS={
     {k:'title',l:'Naziv računa',t:'text',req:1,ph:'Struja — oktobar'},
     {k:'cat',l:'Kategorija',t:'select',o:()=>CN.map(c=>[c,c]),d:()=>'Struja'},
     {k:'provider',l:'Izdavalac',t:'text',h:1,ph:'EPS, SBB, Infostan…'},{k:'amount',l:'Iznos',t:'number',req:1,h:1,step:'0.01'},
-    {k:'cur',l:'Valuta',t:'select',o:()=>[['RSD','RSD'],['EUR','EUR']],d:()=>S().cur,h:1},{k:'user',l:'Član',t:'select',o:userOpts,d:defUser,h:1},
+    {k:'cur',l:'Valuta',t:'select',o:curOpts,d:()=>S().cur,h:1},{k:'user',l:'Član',t:'select',o:userOpts,d:defUser,h:1},
     {k:'date',l:'Datum računa',t:'date',d:todayStr,h:1},{k:'due',l:'Rok plaćanja',t:'date',h:1},
     {k:'recur',l:'Ponavljanje',t:'select',o:()=>RECUR,d:()=>''},
     {k:'paid',l:'Plaćeno',t:'check',d:()=>false},
@@ -361,9 +446,19 @@ const FORMS={
     {k:'kind',l:'Vrsta',t:'select',o:()=>KINDS.map(k=>[k[0],k[1]+' '+k[0]]),d:()=>'Dokument',h:1},{k:'user',l:'Član',t:'select',o:userOpts,d:defUser,h:1},
     {k:'title',l:'Naziv',t:'text',req:1,ph:'Lična karta, frižider Gorenje, teretana…'},
     {k:'buy',l:'Garancija: kupljeno',t:'date',h:1,w:'Garancija'},{k:'months',l:'Garancija: meseci',t:'number',h:1,w:'Garancija'},
+    {k:'shop',l:'Prodavnica',t:'text',h:1,w:'Garancija'},{k:'serial',l:'Serijski broj',t:'text',h:1,w:'Garancija'},
     {k:'date',l:'Datum isteka / važnosti',t:'date',req:1},
     {k:'remind',l:'Podseti X dana ranije',t:'number',h:1,ph:'npr. 30'},{k:'recur',l:'Ponavljanje',t:'select',o:()=>RECUR,d:()=>'',h:1},
-    {k:'amount',l:'Iznos (opciono)',t:'number',h:1,step:'0.01'},{k:'cur',l:'Valuta',t:'select',o:()=>[['RSD','RSD'],['EUR','EUR']],d:()=>S().cur,h:1},
+    {k:'amount',l:'Iznos (opciono)',t:'number',h:1,step:'0.01'},{k:'cur',l:'Valuta',t:'select',o:curOpts,d:()=>S().cur,h:1},
+    {k:'note',l:'Beleška',t:'textarea'}]},
+  beleska:{title:'Beleška',list:'notes',f:[
+    {k:'title',l:'Naslov',t:'text',req:1,ph:'Brojila, šifre, majstori…'},
+    {k:'text',l:'Tekst',t:'textarea',rows:7},
+    {k:'user',l:'Član',t:'select',o:userOpts,d:defUser,h:1},{k:'pin',l:'📌 Prikači na vrh',t:'check',d:()=>false}]},
+  podsetnik:{title:'Podsetnik',list:'reminders',f:[
+    {k:'title',l:'Naziv',t:'text',req:1,ph:'Očitati brojilo, zvati majstora…'},
+    {k:'date',l:'Datum',t:'date',req:1,d:todayStr,h:1},{k:'time',l:'Vreme',t:'time',h:1},
+    {k:'recur',l:'Ponavljanje',t:'select',o:()=>RECUR,d:()=>'',h:1},{k:'user',l:'Član',t:'select',o:userOpts,d:defUser,h:1},
     {k:'note',l:'Beleška',t:'textarea'}]}
 };
 let editing=null;
@@ -373,7 +468,7 @@ function openForm(type,id,pre){
     let val=item?item[x.k]:(pre&&pre[x.k]!==undefined?pre[x.k]:(x.d?x.d():''));if(val==null)val='';
     let el;
     if(x.t==='select')el=`<select class="fld" name="${x.k}">${x.o().map(([v,l])=>`<option value="${esc(v)}" ${String(v)===String(val)?'selected':''}>${esc(l)}</option>`).join('')}</select>`;
-    else if(x.t==='textarea')el=`<textarea class="fld" name="${x.k}" rows="2">${esc(val)}</textarea>`;
+    else if(x.t==='textarea')el=`<textarea class="fld" name="${x.k}" rows="${x.rows||2}">${esc(val)}</textarea>`;
     else if(x.t==='check')return`<label class="row" style="margin:8px 0;grid-column:1/-1"><input type="checkbox" name="${x.k}" ${val?'checked':''} style="width:20px;height:20px"> ${x.l}</label>`;
     else el=`<input class="fld" name="${x.k}" type="${x.t}" ${x.t==='number'?`inputmode="decimal" step="${x.step||'any'}"`:''} value="${esc(val)}" placeholder="${esc(x.ph||'')}" ${x.req?'required':''}>`;
     return`<div data-w="${x.w||''}" style="${x.h?'':'grid-column:1/-1'}"><label class="l">${x.l}${x.req?' *':''}</label>${el}</div>`};
@@ -396,9 +491,9 @@ $('dlgForm').addEventListener('submit',e=>{
   const {type,id}=editing,F=FORMS[type],fd=new FormData($('dlgForm')),o={};
   F.f.forEach(x=>{if(x.t==='check')o[x.k]=$('dlgForm').elements[x.k].checked;else{const v=fd.get(x.k);o[x.k]=(x.t==='number'&&v!=='')?num(v):(v||'')}});
   let it;
-  if(id){it=db[F.list].find(x=>x.id===id);Object.assign(it,o)}else{o.id=uid();if(type==='rok')o.done=false;db[F.list].push(o);it=o}
+  if(id){it=db[F.list].find(x=>x.id===id);Object.assign(it,o)}else{o.id=uid();if(type==='rok'||type==='podsetnik')o.done=false;if(type==='beleska')o.created=todayStr();db[F.list].push(o);it=o}
   if(type==='racun'){if(it.paid&&!it.paidDate)it.paidDate=todayStr();if(!it.paid)it.paidDate='';if(it.paid&&it.recur&&!it.spawned)spawn(it)}
-  if(type==='rok'&&it.kind!=='Garancija'){it.buy='';it.months=''}
+  if(type==='rok'&&it.kind!=='Garancija'){it.buy='';it.months='';it.shop='';it.serial=''}
   save();$('dlg').close();render();toast('Sačuvano ✔');
 });
 document.addEventListener('click',e=>{if(e.target.id==='dlgCancel')$('dlg').close()});
@@ -431,6 +526,8 @@ function exportCsv(){
   const un=id=>(userById(id)||{}).name||'';
   db.bills.filter(userOK).forEach(b=>rows.push(['Račun',b.date,b.due,b.title,b.cat,b.provider,b.amount,b.cur,b.paid?'da':'ne',un(b.user),b.note]));
   db.dates.filter(userOK).forEach(x=>rows.push([x.kind,x.buy||'',x.date,x.title,'','',x.amount||'',x.cur||'',x.done?'završeno':'',un(x.user),x.note]));
+  db.reminders.filter(userOK).forEach(x=>rows.push(['Podsetnik',x.date,'',x.title,'','','','',x.done?'urađeno':'',un(x.user),x.note]));
+  db.notes.filter(userOK).forEach(x=>rows.push(['Beleška',x.created||'','',x.title,'','','','','',un(x.user),(x.text||'').replace(/\n/g,' ')]));
   const csv='\ufeff'+rows.map(r=>r.map(c=>'"'+String(c??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');
   download(`atmos_dom_${todayStr()}.csv`,csv,'text/csv');
 }
@@ -441,7 +538,7 @@ $('impFile').onchange=e=>{
     takeSnap('pre-uvoza',true);
     if(confirm('Spojiti uvezene podatke sa postojećim?\n\nOK = spoji (dodaje nove stavke)\nCancel = zameni sve uvezenim')){
       const addAll=(a,b)=>b.forEach(x=>{const i=a.findIndex(y=>y.id===x.id);if(i<0)a.push(x);else a[i]=x});
-      addAll(db.users,p.users);addAll(db.bills,p.bills||[]);addAll(db.dates,p.dates||[]);
+      addAll(db.users,p.users);addAll(db.bills,p.bills||[]);addAll(db.dates,p.dates||[]);addAll(db.notes,p.notes||[]);addAll(db.reminders,p.reminders||[]);
     }else if(confirm('Zameniti SVE trenutne podatke uvezenim?')){db=norm(p)}else{e.target.value='';return}
     save();go('pregled');toast('Podaci uvezeni ✔');
   }catch{toast('Nepoznat format fajla')}e.target.value=''};
@@ -455,17 +552,19 @@ document.addEventListener('click',e=>{
   if(d.ui){ui[d.ui]=d.val;render();return}
   if(d.tab&&!d.act){go(d.tab);return}
   switch(d.act){
-    case'add':openForm(d.t||(ui.tab==='rokovi'?'rok':'racun'));break;
+    case'add':openForm(d.t||(ui.tab==='rokovi'?'rok':'racun'),null,d.kind?{kind:d.kind,recur:d.kind==='Garancija'?'':'1'}:undefined);break;
     case'edit':openForm(d.t,d.id);break;
     case'off':ui.off=Math.max(0,ui.off+(+d.d));render();break;
     case'del':{const F=FORMS[d.t];if(confirm('Obrisati ovaj zapis?')){takeSnap('pre-brisanja',true);db[F.list]=db[F.list].filter(x=>x.id!==d.id);save();render();toast('Obrisano')}break}
     case'pay':{const x=db.bills.find(y=>y.id===d.id);if(x){x.paid=true;x.paidDate=todayStr();if(x.recur&&!x.spawned){spawn(x);toast('Plaćeno ✔ — napravljen sledeći račun')}else toast('Označeno kao plaćeno ✔');save();render()}break}
     case'unpay':{const x=db.bills.find(y=>y.id===d.id);if(x){x.paid=false;x.paidDate='';save();render()}break}
-    case'rdone':{const x=db.dates.find(y=>y.id===d.id);if(x){if(x.recur){x.date=addM(x.date,+x.recur);if(x.kind==='Garancija'){x.buy=''}toast('Pomeren na '+fmtDate(x.date))}else{x.done=true;toast('Završeno ✔')}save();render()}break}
+    case'rdone':{const x=db.dates.find(y=>y.id===d.id);if(x){if(MEMK.includes(x.kind)&&num(x.amount))db.bills.push({id:uid(),title:x.title,cat:x.kind==='Pretplata'?'Pretplate':'Članarine',provider:'',amount:x.amount,cur:x.cur||S().cur,user:x.user,date:todayStr(),due:'',paid:true,paidDate:todayStr(),recur:'',spawned:false,note:'Obnova '+x.kind.toLowerCase()+'e'});if(x.recur){x.date=addM(x.date,+x.recur);if(x.kind==='Garancija'){x.buy=''}toast('Pomeren na '+fmtDate(x.date))}else{x.done=true;toast('Završeno ✔')}save();render()}break}
     case'shareone':{const x=db.bills.find(y=>y.id===d.id);if(x)shareText(x.title,`${x.title}\nIznos: ${money(num(x.amount),x.cur)}\n${x.due?'Rok plaćanja: '+fmtDate(x.due)+'\n':''}${x.provider?'Izdavalac: '+x.provider+'\n':''}${x.paid?'Plaćeno':'Neplaćeno'}`);break}
     case'shareunpaid':shareUnpaid();break;
     case'sharereport':{const r=rangeOf(ui.off);shareText('Izveštaj '+r.label,reportText(r,billsIn(r)));break}
     case'sharefile':shareFile();break;
+    case'checkupd':checkUpdate(false);break;
+    case'doupd':if(confirm('Ažurirati aplikaciju? Podaci se prvo sačuvaju i preuzima se izvoz.'))doUpdate();break;
     case'export':S().lastExport=todayStr();save();download(`atmos_dom_backup_${todayStr()}.json`,JSON.stringify(db,null,2),'application/json');toast('Kopija preuzeta');render();break;
     case'snooze':{const n=num(S().backupDays)||7;const x=new Date();x.setDate(x.getDate()-n+1);S().lastExport=ymd(x);save();render();break}
     case'restore':restoreSnap(+d.i);break;
@@ -476,18 +575,207 @@ document.addEventListener('click',e=>{
     case'useredit':{const u=userById(d.id);const n=u&&prompt('Ime:',u.name);if(n&&n.trim()){u.name=n.trim();save();render()}break}
     case'usercolor':{const u=userById(d.id);if(u){u.color=UCOL[(UCOL.indexOf(u.color)+1)%UCOL.length];save();render()}break}
     case'userdel':{if(db.users.length<2){toast('Mora ostati bar jedan član');break}const u=userById(d.id);
-      if(u&&confirm(`Obrisati člana „${u.name}”? Njegove stavke prelaze na prvog člana.`)){const to=db.users.find(x=>x.id!==u.id).id;[...db.bills,...db.dates].forEach(x=>{if(x.user===u.id)x.user=to});db.users=db.users.filter(x=>x.id!==u.id);if(db.filter===u.id)db.filter='all';save();render()}break}
+      if(u&&confirm(`Obrisati člana „${u.name}”? Njegove stavke prelaze na prvog člana.`)){const to=db.users.find(x=>x.id!==u.id).id;[...db.bills,...db.dates,...db.notes,...db.reminders].forEach(x=>{if(x.user===u.id)x.user=to});db.users=db.users.filter(x=>x.id!==u.id);if(db.filter===u.id)db.filter='all';save();render()}break}
+    case'pdone':{const x=db.reminders.find(y=>y.id===d.id);if(x){if(+x.recur){x.date=addM(x.date,+x.recur);toast('Sledeći put: '+fmtDate(x.date))}else{x.done=true;toast('Urađeno ✔')}save();render()}break}
+    case'pundo':{const x=db.reminders.find(y=>y.id===d.id);if(x){x.done=false;save();render()}break}
+    case'psnooze':{const x=db.reminders.find(y=>y.id===d.id);if(x){const t=new Date((x.date<todayStr()?todayStr():x.date)+'T00:00:00');t.setDate(t.getDate()+1);x.date=ymd(t);save();render();toast('Odloženo za '+fmtDate(x.date))}break}
+    case'notepin':{const x=db.notes.find(y=>y.id===d.id);if(x){x.pin=!x.pin;save();render()}break}
+    case'noteshare':{const x=db.notes.find(y=>y.id===d.id);if(x)shareText(x.title,x.title+'\n\n'+(x.text||''));break}
+    case'cvswap':{const t=ui.cv.f;ui.cv.f=ui.cv.t;ui.cv.t=t;render();break}
+    case'ratesrefresh':refreshRates();break;
     case'reset':if(confirm('Obrisati SVE podatke?')&&confirm('Sigurno? Preporuka: prvo napravi izvoz.')){takeSnap('pre-brisanja',true);db=fresh();save();go('pregled')}break;
   }
 });
-$('fab').onclick=()=>openForm(ui.tab==='rokovi'?'rok':'racun');
+$('fab').onclick=()=>{if(ui.tab==='rokovi')openForm('rok');else if(ui.tab==='clanarine')openForm('rok',null,{kind:'Članarina',recur:'1'});else if(ui.tab==='garancije')openForm('rok',null,{kind:'Garancija',recur:''});else if(ui.tab==='podsetnici')openForm('podsetnik');else if(ui.tab==='beleske')openForm('beleska');else openForm('racun')};
 document.addEventListener('change',e=>{
   const el=e.target,d=el.dataset;
   if(el.id==='userSel'){db.filter=el.value;save();render();return}
   if(el.id==='catF'){ui.cat=el.value;render();return}
+  if(d.rate!==undefined){const v=num(el.value);if(v>0)S().rates[d.rate]=v;save();render();return}
   if(d.cfg!==undefined){S()[d.cfg]=(el.type==='number'||d.n)?num(el.value):el.value;save();render()}
 });
-document.addEventListener('input',e=>{if(e.target.id==='q'){ui.q=e.target.value;const p=e.target.selectionStart;render();const q=$('q');q.focus();q.setSelectionRange(p,p)}});
+document.addEventListener('input',e=>{const t=e.target;
+  if(t.id==='q'){ui.q=t.value;const p=t.selectionStart;render();const q=$('q');q.focus();q.setSelectionRange(p,p)}
+  else if(t.dataset.cv!==undefined){ui.cv[t.dataset.cv]=t.value;updCv()}
+  else if(t.dataset.tool!==undefined)updTools();
+});
+
+/* ---------- ČLANARINE, GARANCIJE, ALATI ---------- */
+const MEMK=['Članarina','Pretplata'];
+const recurLbl=r=>r==='12'?'godišnje':r==='1'?'mesečno':r?'na '+r+' mes.':'';
+const fmtN=(n,d)=>(Number(n)||0).toLocaleString('sr-RS',{maximumFractionDigits:d==null?2:d});
+const statCls={bad:'b-bad',warn:'b-warn',ok:'b-ok',n:'b-n'};
+function monthlyOf(x){const n=+x.recur;if(!n||!num(x.amount))return 0;return toBase(num(x.amount),x.cur||S().cur)/n}
+
+function pgClanarine(){
+  const all=db.dates.filter(x=>userOK(x)&&MEMK.includes(x.kind)).sort((a,b)=>(a.done-b.done)||String(a.date).localeCompare(String(b.date)));
+  const act=all.filter(x=>!x.done),done=all.filter(x=>x.done);
+  const mon=act.reduce((s,x)=>s+monthlyOf(x),0),noRec=act.filter(x=>num(x.amount)&&!+x.recur).length;
+  const it=x=>{const s=dateStat(x.date,dateWarn(x)),m=monthlyOf(x),cu=x.cur||S().cur;
+    return`<div class="item ${x.done?'paid':''}"><div class="ic">${KI[x.kind]||'🏷️'}</div><div class="grow"><div class="t">${esc(x.title)}</div>
+    <div class="small muted">${esc(x.kind)} · ${x.done?'završeno':'obnavlja se '+fmtDate(x.date)}${m?' · ≈ '+money(m)+' mesečno':''}</div>
+    <div class="row wrap" style="gap:8px;margin-top:4px">${x.done?'<span class="badge b-n">Završeno</span>':`<span class="badge ${statCls[s.lvl]}">${esc(s.badge)}</span>`}${uChip(x.user)}${x.recur?`<span class="badge b-n">🔁 ${recurLbl(x.recur)}</span>`:''}</div>
+    ${x.note?`<div class="small muted" style="margin-top:4px">${esc(x.note)}</div>`:''}
+    <div class="acts noprint">${x.done?'':`<button class="btn-s btn-p" data-act="rdone" data-id="${x.id}">✔ Obnovljeno${num(x.amount)?' + upiši trošak':''}</button>`}<button class="btn-s" data-act="edit" data-t="rok" data-id="${x.id}">✏️</button><button class="btn-s btn-d" data-act="del" data-t="rok" data-id="${x.id}">🗑️</button></div></div>
+    <div class="amt">${num(x.amount)?money(num(x.amount),cu):'—'}</div></div>`};
+  return`<div class="grid g3" style="margin-bottom:12px"><div class="stat"><small>Mesečno</small><b>${money(mon)}</b></div><div class="stat"><small>Godišnje</small><b>${money(mon*12)}</b></div><div class="stat"><small>Aktivnih</small><b>${act.length}</b></div></div>
+  ${noRec?`<div class="small muted" style="margin:-4px 2px 10px">${noRec} stavki nema podešeno ponavljanje pa nisu uračunate u mesečni zbir.</div>`:''}
+  <div class="row wrap noprint" style="margin-bottom:12px"><button class="btn-p grow" data-act="add" data-t="rok" data-kind="Članarina">🏷️ Nova članarina</button><button class="btn-p grow" data-act="add" data-t="rok" data-kind="Pretplata">🔁 Nova pretplata</button></div>
+  ${act.length?act.map(it).join(''):'<div class="empty">Nema članarina ni pretplata. Dodaj teretanu, Netflix, sindikat, klub…<br><span class="small">Kad pritisneš „Obnovljeno“, datum se pomera i trošak se upisuje u račune.</span></div>'}
+  ${done.length?`<div class="muted small" style="margin:14px 2px 8px">Završeno</div>${done.map(it).join('')}`:''}`;
+}
+
+function pgGarancije(){
+  const q=ui.q.toLowerCase();
+  let all=db.dates.filter(x=>userOK(x)&&x.kind==='Garancija');
+  if(q)all=all.filter(x=>[x.title,x.shop,x.serial,x.note].join(' ').toLowerCase().includes(q));
+  all.sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+  const isExp=x=>x.date&&dayDiff(x.date)<0;
+  const exp=all.filter(isExp),act=all.filter(x=>!isExp(x));
+  const soon=act.filter(x=>x.date&&dayDiff(x.date)<=60).length;
+  const it=x=>{const s=dateStat(x.date,dateWarn(x));
+    return`<div class="item ${isExp(x)?'paid':''}"><div class="ic">🛠️</div><div class="grow"><div class="t">${esc(x.title)}</div>
+    <div class="small muted">${x.buy?'Kupljeno '+fmtDate(x.buy)+' · ':''}ističe ${fmtDate(x.date)}${x.months?' · '+esc(x.months)+' mes.':''}</div>
+    ${x.shop||x.serial?`<div class="small muted">${x.shop?'🏬 '+esc(x.shop):''}${x.shop&&x.serial?' · ':''}${x.serial?'S/N '+esc(x.serial):''}</div>`:''}
+    <div class="row wrap" style="gap:8px;margin-top:4px"><span class="badge ${statCls[s.lvl]}">${esc(s.badge)}</span>${uChip(x.user)}</div>
+    ${x.note?`<div class="small muted" style="margin-top:4px">${esc(x.note)}</div>`:''}
+    <div class="acts noprint"><button class="btn-s" data-act="edit" data-t="rok" data-id="${x.id}">✏️</button><button class="btn-s btn-d" data-act="del" data-t="rok" data-id="${x.id}">🗑️</button></div></div>
+    <div class="amt">${num(x.amount)?money(num(x.amount),x.cur||S().cur):''}</div></div>`};
+  return`<div class="grid g3" style="margin-bottom:12px"><div class="stat"><small>Aktivne</small><b>${act.length}</b></div><div class="stat"><small>Ističu u 60 dana</small><b style="color:${soon?'var(--warn)':'inherit'}">${soon}</b></div><div class="stat"><small>Istekle</small><b>${exp.length}</b></div></div>
+  <div class="row wrap noprint" style="margin-bottom:12px;gap:8px"><input class="fld grow" id="q" placeholder="🔍 Pretraga (naziv, prodavnica, S/N)…" value="${esc(ui.q)}"><button class="btn-p" data-act="add" data-t="rok" data-kind="Garancija">🛠️ Nova garancija</button></div>
+  ${act.length?act.map(it).join(''):'<div class="empty">Nema aktivnih garancija. Unesi datum kupovine i broj meseci — rok isteka se sam izračuna.</div>'}
+  ${exp.length?`<div class="muted small" style="margin:14px 2px 8px">Istekle garancije</div>${exp.map(it).join('')}`:''}`;
+}
+
+function pgVise(){
+  const b=(t,ic,n,s)=>`<button data-tab="${t}"><span style="font-size:1.6rem">${ic}</span><div><b>${n}</b><div class="small muted">${s}</div></div></button>`;
+  return`<div class="more">${b('podsetnici','⏰','Podsetnici','Datum i vreme, ponavljanje, odlaganje')}${b('beleske','📝','Beleške','Brojila, šifre, kontakti, spiskovi')}${b('clanarine','🏷️','Članarine i pretplate','Mesečni i godišnji zbir, obnavljanje')}${b('garancije','🛠️','Garancije','Aktivne i istekle, serijski brojevi')}${b('kalkulator','🧮','Kalkulator','PDV, podela računa')}${b('kurs','💱','Kursna lista i konverter','EUR, USD, CHF, GBP…')}${b('podesavanja','⚙️','Podešavanja','Tema, članovi, budžet, kopije')}</div>`;
+}
+
+/* ---- budžet ---- */
+function budgetCard(total,r){
+  const lim=num(S().budget)*r.N;if(!lim)return'';
+  const pct=total/lim*100,col=pct>=100?'var(--bad)':pct>=80?'var(--warn)':'var(--ok)';
+  return`<div class="card"><h3>🎯 Budžet <span class="small muted">${money(total)} / ${money(lim)}</span></h3><div class="cbar" style="height:12px"><i style="width:${Math.min(100,pct)}%;background:${col}"></i></div>
+  <div class="small muted" style="margin-top:6px">${pct>=100?'Prekoračeno za '+money(total-lim):'Preostalo '+money(lim-total)} (${pct.toFixed(0)}%)</div></div>`;
+}
+
+/* ---- kalkulator ---- */
+function calcEval(s){
+  s=s.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/,/g,'.');let i=0;
+  const ws=()=>{while(s[i]===' ')i++};
+  const nm=()=>{ws();const m=/^(\d+\.?\d*|\.\d+)/.exec(s.slice(i));if(!m)throw 0;i+=m[0].length;return parseFloat(m[0])};
+  const pct=v=>{ws();while(s[i]==='%'){v/=100;i++;ws()}return v};
+  const prim=()=>{ws();if(s[i]==='-'){i++;return -prim()}if(s[i]==='('){i++;const v=expr();ws();if(s[i]!==')')throw 0;i++;return pct(v)}return pct(nm())};
+  const term=()=>{let v=prim();for(;;){ws();if(s[i]==='*'){i++;v*=prim()}else if(s[i]==='/'){i++;const d=prim();if(d===0)throw 0;v/=d}else return v}};
+  const expr=()=>{let v=term();for(;;){ws();if(s[i]==='+'){i++;v+=term()}else if(s[i]==='-'){i++;v-=term()}else return v}};
+  const v=expr();ws();if(i<s.length)throw 0;return v;
+}
+function calcKey(k){
+  const c=ui.calc;
+  if(k==='C')c.expr='';
+  else if(k==='⌫')c.expr=c.expr.slice(0,-1);
+  else if(k==='='){try{const v=calcEval(c.expr);c.expr=String(Math.round(v*1e10)/1e10)}catch{toast('Neispravan izraz')}}
+  else c.expr+=(k===','?'.':k);
+  calcUpd();
+}
+function calcUpd(){
+  const e=$('calcExpr');if(!e)return;
+  e.textContent=ui.calc.expr.replace(/\./g,',')||'0';let r='';
+  try{if(/[+×÷−%]/.test(ui.calc.expr.slice(1))){r='= '+fmtN(calcEval(ui.calc.expr),8)}}catch{}
+  $('calcRes').textContent=r;
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-calc]');if(b)calcKey(b.dataset.calc)});
+document.addEventListener('keydown',e=>{
+  if(ui.tab!=='kalkulator'||$('dlg').open||/INPUT|SELECT|TEXTAREA/.test((document.activeElement||{}).tagName||''))return;
+  const k=e.key;
+  if(/^[0-9()%]$/.test(k))calcKey(k);else if(k===','||k==='.')calcKey(',');else if(k==='+')calcKey('+');else if(k==='-')calcKey('−');else if(k==='*')calcKey('×');else if(k==='/'){e.preventDefault();calcKey('÷')}
+  else if(k==='Enter'||k==='='){e.preventDefault();calcKey('=')}else if(k==='Backspace')calcKey('⌫');else if(k==='Escape')calcKey('C');
+});
+function pgKalkulator(){
+  const keys=[['C','⌫','%','÷'],['7','8','9','×'],['4','5','6','−'],['1','2','3','+'],['0',',','(',')']];
+  return`<div class="card"><h3>🧮 Kalkulator</h3>
+   <div class="calcd"><div id="calcExpr" class="calce">0</div><div id="calcRes" class="calcr"></div></div>
+   <div class="calck">${keys.flat().map(k=>`<button data-calc="${k}" class="${/[÷×−+]/.test(k)?'op':''}">${k}</button>`).join('')}</div>
+   <button class="btn-p" data-calc="=" style="width:100%;margin-top:8px;padding:14px;font-size:1.1rem">=</button></div>
+  <div class="card"><h3>🧾 PDV</h3>
+   <div class="grid g3"><div><label class="l">Iznos</label><input class="fld" type="number" inputmode="decimal" step="any" id="pdvA" data-tool></div>
+   <div><label class="l">Stopa</label><select class="fld" id="pdvR" data-tool><option value="20">20%</option><option value="10">10%</option></select></div>
+   <div><label class="l">Iznos je</label><select class="fld" id="pdvM" data-tool><option value="without">bez PDV-a</option><option value="with">sa PDV-om</option></select></div></div>
+   <div id="pdvOut" style="margin-top:10px"></div></div>
+  <div class="card"><h3>👥 Podela troškova</h3>
+   <div class="grid g2"><div><label class="l">Ukupan iznos</label><input class="fld" type="number" inputmode="decimal" step="any" id="spA" data-tool></div>
+   <div><label class="l">Broj osoba</label><input class="fld" type="number" min="1" id="spN" data-tool value="${db.users.length}"></div></div>
+   <div id="spOut" style="margin-top:10px"></div></div>`;
+}
+function updTools(){
+  const row=(l,v)=>`<div class="row sp" style="padding:5px 0;border-bottom:1px solid var(--line)"><span class="muted">${l}</span><b>${v}</b></div>`;
+  if($('pdvOut')){
+    const a=num($('pdvA').value),r=num($('pdvR').value)/100,m=$('pdvM').value;
+    const base=m==='with'?a/(1+r):a,tot=m==='with'?a:a*(1+r);
+    $('pdvOut').innerHTML=a?row('Osnovica',money(base))+row('PDV ('+Math.round(r*100)+'%)',money(tot-base))+row('Ukupno sa PDV-om',money(tot)):'';
+  }
+  if($('spOut')){
+    const a=num($('spA').value),n=Math.max(1,Math.floor(num($('spN').value))||1);
+    $('spOut').innerHTML=a?row('Po osobi',money(a/n))+row('Ukupno',money(a)):'';
+  }
+}
+
+/* ---- kursna lista i konverter ---- */
+function pgKurs(){
+  const opts=sel=>['RSD',...CURS].map(c=>`<option ${c===sel?'selected':''}>${c}</option>`).join('');
+  return`<div class="card"><h3>💱 Konverter valuta</h3>
+   <div class="grid g3" style="align-items:end"><div><label class="l">Iznos</label><input class="fld" type="number" inputmode="decimal" step="any" data-cv="a" value="${esc(ui.cv.a)}"></div>
+   <div><label class="l">Iz</label><select class="fld" data-cv="f">${opts(ui.cv.f)}</select></div>
+   <div><label class="l">U</label><select class="fld" data-cv="t">${opts(ui.cv.t)}</select></div></div>
+   <div class="row" style="margin-top:10px"><button class="btn-s" data-act="cvswap">⇄ Zameni</button></div>
+   <div id="cvOut" style="margin-top:10px"></div></div>
+  <div class="card"><h3>📈 Kursna lista <button class="btn-s btn-p" data-act="ratesrefresh">🔄 Osveži (internet)</button></h3>
+   ${CURS.map(c=>`<div class="row sp" style="padding:6px 0;border-bottom:1px solid var(--line)"><span>1 ${c} =</span><div class="row"><input class="fld" style="width:120px;text-align:right" type="number" step="any" data-rate="${c}" value="${S().rates[c]}"><span class="muted small">RSD</span></div></div>`).join('')}
+   <div class="small muted" style="margin-top:8px">${S().ratesDate?'Poslednje osvežavanje: '+fmtDate(S().ratesDate)+'.':'Ovo su okvirne vrednosti — osveži ih ili unesi ručno.'} Kursevi se koriste za zbir računa u različitim valutama. Izvor pri osvežavanju: open.er-api.com (srednji kurs, ne zvanični NBS).</div></div>`;
+}
+function updCv(){
+  const o=$('cvOut');if(!o)return;
+  const a=num(ui.cv.a),f=ui.cv.f,t=ui.cv.t,k=rsdPer(f)/rsdPer(t);
+  o.innerHTML=`<div style="font-size:1.5rem;font-weight:800">${fmtN(a*k)} ${t}</div><div class="small muted">${fmtN(a)} ${f} · kurs: 1 ${f} = ${fmtN(k,4)} ${t}</div>`;
+}
+async function refreshRates(){
+  if(!navigator.onLine){toast('Nema internet veze');return}
+  try{
+    const r=await fetch('https://open.er-api.com/v6/latest/RSD'),j=await r.json();
+    if(j.result!=='success')throw 0;
+    CURS.forEach(c=>{const v=j.rates&&j.rates[c];if(v>0)S().rates[c]=Math.round(1/v*10000)/10000});
+    S().ratesDate=todayStr();save();render();toast('Kursevi osveženi ✔');
+  }catch{toast('Osvežavanje nije uspelo — unesi kurs ručno')}
+}
+
+/* ---------- BELEŠKE I PODSETNICI ---------- */
+function pgBeleske(){
+  const q=ui.q.toLowerCase();
+  let l=db.notes.filter(userOK);
+  if(q)l=l.filter(n=>[n.title,n.text].join(' ').toLowerCase().includes(q));
+  l.sort((a,b)=>(b.pin?1:0)-(a.pin?1:0)||String(b.created||'').localeCompare(String(a.created||'')));
+  return`<div class="row wrap noprint" style="margin-bottom:12px;gap:8px"><input class="fld grow" id="q" placeholder="🔍 Pretraga beleški…" value="${esc(ui.q)}"><button class="btn-p" data-act="add" data-t="beleska">📝 Nova beleška</button></div>
+  ${l.length?l.map(n=>`<div class="item"><div class="ic">${n.pin?'📌':'📝'}</div><div class="grow"><div class="t">${esc(n.title)}</div>
+    ${n.text?`<div style="white-space:pre-wrap;word-break:break-word;margin-top:4px">${esc(n.text)}</div>`:''}
+    <div class="row wrap small muted" style="gap:8px;margin-top:6px">${n.created?fmtDate(n.created):''}${uChip(n.user)}</div>
+    <div class="acts noprint"><button class="btn-s" data-act="notepin" data-id="${n.id}">${n.pin?'📌 Otkači':'📌 Prikači'}</button><button class="btn-s" data-act="noteshare" data-id="${n.id}">📤</button><button class="btn-s" data-act="edit" data-t="beleska" data-id="${n.id}">✏️</button><button class="btn-s btn-d" data-act="del" data-t="beleska" data-id="${n.id}">🗑️</button></div></div></div>`).join(''):'<div class="empty">Nema beleški. Pritisni + da dodaš (šifre, brojila, spiskovi, kontakti majstora…).</div>'}`;
+}
+function pgPodsetnici(){
+  const l=db.reminders.filter(userOK),key=x=>(x.date||'')+(x.time||'');
+  const act=l.filter(x=>!x.done).sort((a,b)=>key(a).localeCompare(key(b))),done=l.filter(x=>x.done).sort((a,b)=>key(b).localeCompare(key(a)));
+  const late=act.filter(x=>x.date&&dayDiff(x.date)<0).length,today=act.filter(x=>x.date&&dayDiff(x.date)===0).length;
+  const it=x=>{const s=x.done?{lvl:'n',badge:'Urađeno'}:dateStat(x.date,1);if(!x.done)s.badge=s.badge.replace('Isteklo pre','Kasni');
+    return`<div class="item ${x.done?'paid':''}"><div class="ic">⏰</div><div class="grow"><div class="t">${esc(x.title)}</div>
+    <div class="small muted">${fmtDate(x.date)}${x.time?' u '+esc(x.time):''}</div>
+    <div class="row wrap" style="gap:8px;margin-top:4px"><span class="badge ${statCls[s.lvl]}">${esc(s.badge)}</span>${uChip(x.user)}${x.recur?`<span class="badge b-n">🔁 ${recurLbl(x.recur)}</span>`:''}</div>
+    ${x.note?`<div class="small muted" style="margin-top:4px">${esc(x.note)}</div>`:''}
+    <div class="acts noprint">${x.done?`<button class="btn-s" data-act="pundo" data-id="${x.id}">↩ Vrati</button>`:`<button class="btn-s btn-p" data-act="pdone" data-id="${x.id}">✔ Urađeno${x.recur?' → sledeći put':''}</button><button class="btn-s" data-act="psnooze" data-id="${x.id}">⏭ +1 dan</button>`}<button class="btn-s" data-act="edit" data-t="podsetnik" data-id="${x.id}">✏️</button><button class="btn-s btn-d" data-act="del" data-t="podsetnik" data-id="${x.id}">🗑️</button></div></div></div>`};
+  return`<div class="grid g3" style="margin-bottom:12px"><div class="stat"><small>Aktivnih</small><b>${act.length}</b></div><div class="stat"><small>Danas</small><b>${today}</b></div><div class="stat"><small>Kasne</small><b style="color:${late?'var(--bad)':'inherit'}">${late}</b></div></div>
+  <div class="row noprint" style="margin-bottom:12px"><button class="btn-p grow" data-act="add" data-t="podsetnik">⏰ Novi podsetnik</button></div>
+  ${act.length?act.map(it).join(''):'<div class="empty">Nema podsetnika. Dodaj npr. „Očitati brojilo“, „Platiti stanarinu“, „Zvati majstora“.</div>'}
+  ${done.length?`<div class="muted small" style="margin:14px 2px 8px">Urađeno</div>${done.slice(0,15).map(it).join('')}`:''}`;
+}
 
 /* ---------- OBAVEŠTENJA ---------- */
 async function testNotif(){
@@ -594,7 +882,10 @@ $('scanBtn').onclick=()=>$('scanFile').click();
 /* ---------- PWA / START ---------- */
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
 matchMedia('(prefers-color-scheme: light)').addEventListener?.('change',()=>S().theme==='auto'&&applyTheme());
-takeSnap('automatski');render();setTimeout(checkNotif,1200);syncAlerts();
+let wasWide=innerWidth>=900;addEventListener('resize',()=>{const w=innerWidth>=900;if(w!==wasWide){wasWide=w;render()}});
+verifyAfterUpdate();takeSnap('automatski');render();if(navigator.onLine&&S().lastUpdCheck!==todayStr())setTimeout(()=>checkUpdate(true),2500);setTimeout(checkNotif,1200);syncAlerts();
 </script>
+<div class="coffee-ov" id="coffeeOv" role="dialog" aria-modal="true" aria-labelledby="coffeeT"><div class="coffee-box"><button class="coffee-x" id="coffeeX" aria-label="Zatvori">&times;</button><h3 id="coffeeT">&#9749; Plati mi kafu</h3><p>Ako Vam se dopadaju moje aplikacije i želite da uplatite neki simboličan iznos za kafu ili ručak :D</p><p>Možete donirati na račun:</p><div class="coffee-acc">115000000006810143</div><p><b>Željko Ilić</b><br>Beograd</p><button class="btn-p" id="coffeeCopy" type="button">Kopiraj broj računa</button><div class="coffee-amts"><button type="button" data-a="200" class="">200 RSD</button><button type="button" data-a="500" class="on">500 RSD</button><button type="button" data-a="1000" class="">1000 RSD</button></div><div class="coffee-qr"><div class="coffee-qrv" data-a="200" hidden><svg role="img" aria-label="IPS QR kod 200 RSD" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 49 49" shape-rendering="crispEdges"><rect width="100%" height="100%" fill="#fff"/><path d="M4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM7 4h1v1h-1zM8 4h1v1h-1zM9 4h1v1h-1zM10 4h1v1h-1zM12 4h1v1h-1zM13 4h1v1h-1zM14 4h1v1h-1zM18 4h1v1h-1zM20 4h1v1h-1zM21 4h1v1h-1zM23 4h1v1h-1zM25 4h1v1h-1zM26 4h1v1h-1zM29 4h1v1h-1zM30 4h1v1h-1zM36 4h1v1h-1zM38 4h1v1h-1zM39 4h1v1h-1zM40 4h1v1h-1zM41 4h1v1h-1zM42 4h1v1h-1zM43 4h1v1h-1zM44 4h1v1h-1zM4 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM15 5h1v1h-1zM16 5h1v1h-1zM17 5h1v1h-1zM18 5h1v1h-1zM19 5h1v1h-1zM20 5h1v1h-1zM22 5h1v1h-1zM24 5h1v1h-1zM27 5h1v1h-1zM29 5h1v1h-1zM33 5h1v1h-1zM36 5h1v1h-1zM38 5h1v1h-1zM44 5h1v1h-1zM4 6h1v1h-1zM6 6h1v1h-1zM7 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM13 6h1v1h-1zM15 6h1v1h-1zM17 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM21 6h1v1h-1zM23 6h1v1h-1zM28 6h1v1h-1zM32 6h1v1h-1zM34 6h1v1h-1zM38 6h1v1h-1zM40 6h1v1h-1zM41 6h1v1h-1zM42 6h1v1h-1zM44 6h1v1h-1zM4 7h1v1h-1zM6 7h1v1h-1zM7 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM13 7h1v1h-1zM14 7h1v1h-1zM18 7h1v1h-1zM19 7h1v1h-1zM23 7h1v1h-1zM25 7h1v1h-1zM27 7h1v1h-1zM28 7h1v1h-1zM30 7h1v1h-1zM31 7h1v1h-1zM34 7h1v1h-1zM35 7h1v1h-1zM38 7h1v1h-1zM40 7h1v1h-1zM41 7h1v1h-1zM42 7h1v1h-1zM44 7h1v1h-1zM4 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM10 8h1v1h-1zM13 8h1v1h-1zM19 8h1v1h-1zM21 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM27 8h1v1h-1zM28 8h1v1h-1zM29 8h1v1h-1zM30 8h1v1h-1zM31 8h1v1h-1zM32 8h1v1h-1zM33 8h1v1h-1zM38 8h1v1h-1zM40 8h1v1h-1zM41 8h1v1h-1zM42 8h1v1h-1zM44 8h1v1h-1zM4 9h1v1h-1zM10 9h1v1h-1zM13 9h1v1h-1zM14 9h1v1h-1zM16 9h1v1h-1zM18 9h1v1h-1zM20 9h1v1h-1zM23 9h1v1h-1zM24 9h1v1h-1zM29 9h1v1h-1zM30 9h1v1h-1zM35 9h1v1h-1zM38 9h1v1h-1zM44 9h1v1h-1zM4 10h1v1h-1zM5 10h1v1h-1zM6 10h1v1h-1zM7 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM10 10h1v1h-1zM12 10h1v1h-1zM14 10h1v1h-1zM16 10h1v1h-1zM18 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h1v1h-1zM30 10h1v1h-1zM32 10h1v1h-1zM34 10h1v1h-1zM36 10h1v1h-1zM38 10h1v1h-1zM39 10h1v1h-1zM40 10h1v1h-1zM41 10h1v1h-1zM42 10h1v1h-1zM43 10h1v1h-1zM44 10h1v1h-1zM12 11h1v1h-1zM13 11h1v1h-1zM14 11h1v1h-1zM17 11h1v1h-1zM18 11h1v1h-1zM19 11h1v1h-1zM21 11h1v1h-1zM23 11h1v1h-1zM26 11h1v1h-1zM27 11h1v1h-1zM30 11h1v1h-1zM32 11h1v1h-1zM33 11h1v1h-1zM34 11h1v1h-1zM4 12h1v1h-1zM6 12h1v1h-1zM7 12h1v1h-1zM9 12h1v1h-1zM10 12h1v1h-1zM11 12h1v1h-1zM13 12h1v1h-1zM15 12h1v1h-1zM16 12h1v1h-1zM18 12h1v1h-1zM19 12h1v1h-1zM21 12h1v1h-1zM23 12h1v1h-1zM24 12h1v1h-1zM25 12h1v1h-1zM26 12h1v1h-1zM28 12h1v1h-1zM29 12h1v1h-1zM30 12h1v1h-1zM33 12h1v1h-1zM34 12h1v1h-1zM36 12h1v1h-1zM38 12h1v1h-1zM41 12h1v1h-1zM43 12h1v1h-1zM44 12h1v1h-1zM4 13h1v1h-1zM5 13h1v1h-1zM6 13h1v1h-1zM8 13h1v1h-1zM11 13h1v1h-1zM13 13h1v1h-1zM14 13h1v1h-1zM17 13h1v1h-1zM19 13h1v1h-1zM20 13h1v1h-1zM21 13h1v1h-1zM23 13h1v1h-1zM26 13h1v1h-1zM27 13h1v1h-1zM28 13h1v1h-1zM29 13h1v1h-1zM30 13h1v1h-1zM32 13h1v1h-1zM33 13h1v1h-1zM35 13h1v1h-1zM37 13h1v1h-1zM38 13h1v1h-1zM39 13h1v1h-1zM40 13h1v1h-1zM42 13h1v1h-1zM43 13h1v1h-1zM7 14h1v1h-1zM8 14h1v1h-1zM10 14h1v1h-1zM11 14h1v1h-1zM12 14h1v1h-1zM17 14h1v1h-1zM19 14h1v1h-1zM20 14h1v1h-1zM21 14h1v1h-1zM22 14h1v1h-1zM24 14h1v1h-1zM27 14h1v1h-1zM28 14h1v1h-1zM32 14h1v1h-1zM34 14h1v1h-1zM36 14h1v1h-1zM41 14h1v1h-1zM43 14h1v1h-1zM4 15h1v1h-1zM5 15h1v1h-1zM7 15h1v1h-1zM8 15h1v1h-1zM11 15h1v1h-1zM14 15h1v1h-1zM15 15h1v1h-1zM17 15h1v1h-1zM18 15h1v1h-1zM19 15h1v1h-1zM20 15h1v1h-1zM22 15h1v1h-1zM23 15h1v1h-1zM29 15h1v1h-1zM32 15h1v1h-1zM35 15h1v1h-1zM37 15h1v1h-1zM38 15h1v1h-1zM41 15h1v1h-1zM4 16h1v1h-1zM7 16h1v1h-1zM9 16h1v1h-1zM10 16h1v1h-1zM11 16h1v1h-1zM12 16h1v1h-1zM14 16h1v1h-1zM16 16h1v1h-1zM17 16h1v1h-1zM20 16h1v1h-1zM22 16h1v1h-1zM24 16h1v1h-1zM26 16h1v1h-1zM28 16h1v1h-1zM29 16h1v1h-1zM30 16h1v1h-1zM31 16h1v1h-1zM32 16h1v1h-1zM33 16h1v1h-1zM34 16h1v1h-1zM39 16h1v1h-1zM41 16h1v1h-1zM42 16h1v1h-1zM43 16h1v1h-1zM44 16h1v1h-1zM7 17h1v1h-1zM9 17h1v1h-1zM11 17h1v1h-1zM13 17h1v1h-1zM18 17h1v1h-1zM19 17h1v1h-1zM24 17h1v1h-1zM27 17h1v1h-1zM28 17h1v1h-1zM30 17h1v1h-1zM33 17h1v1h-1zM34 17h1v1h-1zM35 17h1v1h-1zM38 17h1v1h-1zM39 17h1v1h-1zM41 17h1v1h-1zM42 17h1v1h-1zM44 17h1v1h-1zM4 18h1v1h-1zM5 18h1v1h-1zM7 18h1v1h-1zM10 18h1v1h-1zM11 18h1v1h-1zM12 18h1v1h-1zM13 18h1v1h-1zM17 18h1v1h-1zM19 18h1v1h-1zM23 18h1v1h-1zM24 18h1v1h-1zM25 18h1v1h-1zM26 18h1v1h-1zM27 18h1v1h-1zM29 18h1v1h-1zM33 18h1v1h-1zM35 18h1v1h-1zM37 18h1v1h-1zM41 18h1v1h-1zM42 18h1v1h-1zM43 18h1v1h-1zM44 18h1v1h-1zM5 19h1v1h-1zM7 19h1v1h-1zM8 19h1v1h-1zM11 19h1v1h-1zM13 19h1v1h-1zM16 19h1v1h-1zM17 19h1v1h-1zM18 19h1v1h-1zM19 19h1v1h-1zM20 19h1v1h-1zM25 19h1v1h-1zM26 19h1v1h-1zM27 19h1v1h-1zM31 19h1v1h-1zM34 19h1v1h-1zM35 19h1v1h-1zM37 19h1v1h-1zM40 19h1v1h-1zM4 20h1v1h-1zM5 20h1v1h-1zM6 20h1v1h-1zM8 20h1v1h-1zM9 20h1v1h-1zM10 20h1v1h-1zM12 20h1v1h-1zM14 20h1v1h-1zM15 20h1v1h-1zM17 20h1v1h-1zM18 20h1v1h-1zM19 20h1v1h-1zM20 20h1v1h-1zM22 20h1v1h-1zM26 20h1v1h-1zM28 20h1v1h-1zM29 20h1v1h-1zM30 20h1v1h-1zM32 20h1v1h-1zM33 20h1v1h-1zM34 20h1v1h-1zM35 20h1v1h-1zM37 20h1v1h-1zM40 20h1v1h-1zM41 20h1v1h-1zM43 20h1v1h-1zM5 21h1v1h-1zM8 21h1v1h-1zM11 21h1v1h-1zM13 21h1v1h-1zM14 21h1v1h-1zM19 21h1v1h-1zM22 21h1v1h-1zM25 21h1v1h-1zM26 21h1v1h-1zM27 21h1v1h-1zM28 21h1v1h-1zM29 21h1v1h-1zM31 21h1v1h-1zM32 21h1v1h-1zM33 21h1v1h-1zM34 21h1v1h-1zM37 21h1v1h-1zM38 21h1v1h-1zM39 21h1v1h-1zM42 21h1v1h-1zM43 21h1v1h-1zM4 22h1v1h-1zM6 22h1v1h-1zM8 22h1v1h-1zM9 22h1v1h-1zM10 22h1v1h-1zM13 22h1v1h-1zM14 22h1v1h-1zM15 22h1v1h-1zM20 22h1v1h-1zM22 22h1v1h-1zM26 22h1v1h-1zM28 22h1v1h-1zM31 22h1v1h-1zM33 22h1v1h-1zM36 22h1v1h-1zM37 22h1v1h-1zM41 22h1v1h-1zM42 22h1v1h-1zM43 22h1v1h-1zM4 23h1v1h-1zM6 23h1v1h-1zM7 23h1v1h-1zM8 23h1v1h-1zM9 23h1v1h-1zM11 23h1v1h-1zM15 23h1v1h-1zM16 23h1v1h-1zM19 23h1v1h-1zM20 23h1v1h-1zM21 23h1v1h-1zM22 23h1v1h-1zM23 23h1v1h-1zM24 23h1v1h-1zM25 23h1v1h-1zM27 23h1v1h-1zM31 23h1v1h-1zM36 23h1v1h-1zM37 23h1v1h-1zM39 23h1v1h-1zM41 23h1v1h-1zM42 23h1v1h-1zM4 24h1v1h-1zM5 24h1v1h-1zM7 24h1v1h-1zM10 24h1v1h-1zM13 24h1v1h-1zM14 24h1v1h-1zM19 24h1v1h-1zM23 24h1v1h-1zM29 24h1v1h-1zM32 24h1v1h-1zM34 24h1v1h-1zM36 24h1v1h-1zM38 24h1v1h-1zM40 24h1v1h-1zM41 24h1v1h-1zM42 24h1v1h-1zM44 24h1v1h-1zM4 25h1v1h-1zM6 25h1v1h-1zM7 25h1v1h-1zM8 25h1v1h-1zM12 25h1v1h-1zM14 25h1v1h-1zM16 25h1v1h-1zM17 25h1v1h-1zM19 25h1v1h-1zM20 25h1v1h-1zM25 25h1v1h-1zM27 25h1v1h-1zM28 25h1v1h-1zM30 25h1v1h-1zM32 25h1v1h-1zM33 25h1v1h-1zM34 25h1v1h-1zM35 25h1v1h-1zM36 25h1v1h-1zM38 25h1v1h-1zM39 25h1v1h-1zM40 25h1v1h-1zM41 25h1v1h-1zM43 25h1v1h-1zM4 26h1v1h-1zM8 26h1v1h-1zM10 26h1v1h-1zM11 26h1v1h-1zM12 26h1v1h-1zM14 26h1v1h-1zM20 26h1v1h-1zM21 26h1v1h-1zM23 26h1v1h-1zM24 26h1v1h-1zM27 26h1v1h-1zM28 26h1v1h-1zM29 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM33 26h1v1h-1zM34 26h1v1h-1zM37 26h1v1h-1zM39 26h1v1h-1zM40 26h1v1h-1zM42 26h1v1h-1zM43 26h1v1h-1zM5 27h1v1h-1zM7 27h1v1h-1zM8 27h1v1h-1zM9 27h1v1h-1zM15 27h1v1h-1zM16 27h1v1h-1zM17 27h1v1h-1zM20 27h1v1h-1zM23 27h1v1h-1zM24 27h1v1h-1zM26 27h1v1h-1zM27 27h1v1h-1zM28 27h1v1h-1zM29 27h1v1h-1zM38 27h1v1h-1zM39 27h1v1h-1zM40 27h1v1h-1zM43 27h1v1h-1zM44 27h1v1h-1zM4 28h1v1h-1zM7 28h1v1h-1zM9 28h1v1h-1zM10 28h1v1h-1zM17 28h1v1h-1zM19 28h1v1h-1zM20 28h1v1h-1zM21 28h1v1h-1zM22 28h1v1h-1zM24 28h1v1h-1zM27 28h1v1h-1zM29 28h1v1h-1zM32 28h1v1h-1zM36 28h1v1h-1zM42 28h1v1h-1zM43 28h1v1h-1zM44 28h1v1h-1zM4 29h1v1h-1zM5 29h1v1h-1zM6 29h1v1h-1zM12 29h1v1h-1zM13 29h1v1h-1zM14 29h1v1h-1zM16 29h1v1h-1zM22 29h1v1h-1zM23 29h1v1h-1zM24 29h1v1h-1zM25 29h1v1h-1zM26 29h1v1h-1zM29 29h1v1h-1zM31 29h1v1h-1zM35 29h1v1h-1zM36 29h1v1h-1zM37 29h1v1h-1zM38 29h1v1h-1zM43 29h1v1h-1zM44 29h1v1h-1zM6 30h1v1h-1zM8 30h1v1h-1zM9 30h1v1h-1zM10 30h1v1h-1zM12 30h1v1h-1zM13 30h1v1h-1zM14 30h1v1h-1zM15 30h1v1h-1zM18 30h1v1h-1zM19 30h1v1h-1zM20 30h1v1h-1zM21 30h1v1h-1zM23 30h1v1h-1zM28 30h1v1h-1zM32 30h1v1h-1zM33 30h1v1h-1zM35 30h1v1h-1zM38 30h1v1h-1zM40 30h1v1h-1zM41 30h1v1h-1zM42 30h1v1h-1zM44 30h1v1h-1zM5 31h1v1h-1zM9 31h1v1h-1zM11 31h1v1h-1zM12 31h1v1h-1zM15 31h1v1h-1zM17 31h1v1h-1zM22 31h1v1h-1zM25 31h1v1h-1zM28 31h1v1h-1zM33 31h1v1h-1zM34 31h1v1h-1zM35 31h1v1h-1zM38 31h1v1h-1zM40 31h1v1h-1zM41 31h1v1h-1zM44 31h1v1h-1zM4 32h1v1h-1zM5 32h1v1h-1zM8 32h1v1h-1zM10 32h1v1h-1zM11 32h1v1h-1zM13 32h1v1h-1zM14 32h1v1h-1zM15 32h1v1h-1zM16 32h1v1h-1zM17 32h1v1h-1zM21 32h1v1h-1zM22 32h1v1h-1zM24 32h1v1h-1zM25 32h1v1h-1zM26 32h1v1h-1zM27 32h1v1h-1zM28 32h1v1h-1zM29 32h1v1h-1zM31 32h1v1h-1zM33 32h1v1h-1zM34 32h1v1h-1zM35 32h1v1h-1zM36 32h1v1h-1zM37 32h1v1h-1zM40 32h1v1h-1zM41 32h1v1h-1zM42 32h1v1h-1zM5 33h1v1h-1zM6 33h1v1h-1zM9 33h1v1h-1zM11 33h1v1h-1zM15 33h1v1h-1zM16 33h1v1h-1zM17 33h1v1h-1zM21 33h1v1h-1zM23 33h1v1h-1zM24 33h1v1h-1zM26 33h1v1h-1zM36 33h1v1h-1zM41 33h1v1h-1zM42 33h1v1h-1zM4 34h1v1h-1zM6 34h1v1h-1zM7 34h1v1h-1zM9 34h1v1h-1zM10 34h1v1h-1zM11 34h1v1h-1zM12 34h1v1h-1zM15 34h1v1h-1zM16 34h1v1h-1zM17 34h1v1h-1zM23 34h1v1h-1zM26 34h1v1h-1zM30 34h1v1h-1zM33 34h1v1h-1zM34 34h1v1h-1zM36 34h1v1h-1zM39 34h1v1h-1zM40 34h1v1h-1zM6 35h1v1h-1zM7 35h1v1h-1zM8 35h1v1h-1zM9 35h1v1h-1zM13 35h1v1h-1zM16 35h1v1h-1zM18 35h1v1h-1zM19 35h1v1h-1zM21 35h1v1h-1zM23 35h1v1h-1zM27 35h1v1h-1zM30 35h1v1h-1zM31 35h1v1h-1zM32 35h1v1h-1zM33 35h1v1h-1zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM39 35h1v1h-1zM42 35h1v1h-1zM44 35h1v1h-1zM5 36h1v1h-1zM7 36h1v1h-1zM9 36h1v1h-1zM10 36h1v1h-1zM12 36h1v1h-1zM13 36h1v1h-1zM14 36h1v1h-1zM15 36h1v1h-1zM20 36h1v1h-1zM22 36h1v1h-1zM24 36h1v1h-1zM25 36h1v1h-1zM26 36h1v1h-1zM28 36h1v1h-1zM31 36h1v1h-1zM34 36h1v1h-1zM36 36h1v1h-1zM37 36h1v1h-1zM38 36h1v1h-1zM39 36h1v1h-1zM40 36h1v1h-1zM42 36h1v1h-1zM44 36h1v1h-1zM12 37h1v1h-1zM17 37h1v1h-1zM20 37h1v1h-1zM21 37h1v1h-1zM23 37h1v1h-1zM25 37h1v1h-1zM26 37h1v1h-1zM27 37h1v1h-1zM28 37h1v1h-1zM29 37h1v1h-1zM30 37h1v1h-1zM34 37h1v1h-1zM36 37h1v1h-1zM40 37h1v1h-1zM41 37h1v1h-1zM44 37h1v1h-1zM4 38h1v1h-1zM5 38h1v1h-1zM6 38h1v1h-1zM7 38h1v1h-1zM8 38h1v1h-1zM9 38h1v1h-1zM10 38h1v1h-1zM12 38h1v1h-1zM16 38h1v1h-1zM20 38h1v1h-1zM22 38h1v1h-1zM24 38h1v1h-1zM27 38h1v1h-1zM29 38h1v1h-1zM33 38h1v1h-1zM36 38h1v1h-1zM38 38h1v1h-1zM40 38h1v1h-1zM41 38h1v1h-1zM4 39h1v1h-1zM10 39h1v1h-1zM12 39h1v1h-1zM15 39h1v1h-1zM16 39h1v1h-1zM18 39h1v1h-1zM21 39h1v1h-1zM34 39h1v1h-1zM36 39h1v1h-1zM40 39h1v1h-1zM44 39h1v1h-1zM4 40h1v1h-1zM6 40h1v1h-1zM7 40h1v1h-1zM8 40h1v1h-1zM10 40h1v1h-1zM13 40h1v1h-1zM18 40h1v1h-1zM19 40h1v1h-1zM20 40h1v1h-1zM23 40h1v1h-1zM25 40h1v1h-1zM28 40h1v1h-1zM30 40h1v1h-1zM31 40h1v1h-1zM32 40h1v1h-1zM34 40h1v1h-1zM36 40h1v1h-1zM37 40h1v1h-1zM38 40h1v1h-1zM39 40h1v1h-1zM40 40h1v1h-1zM41 40h1v1h-1zM42 40h1v1h-1zM43 40h1v1h-1zM4 41h1v1h-1zM6 41h1v1h-1zM7 41h1v1h-1zM8 41h1v1h-1zM10 41h1v1h-1zM12 41h1v1h-1zM13 41h1v1h-1zM14 41h1v1h-1zM15 41h1v1h-1zM18 41h1v1h-1zM20 41h1v1h-1zM21 41h1v1h-1zM26 41h1v1h-1zM28 41h1v1h-1zM29 41h1v1h-1zM30 41h1v1h-1zM31 41h1v1h-1zM33 41h1v1h-1zM34 41h1v1h-1zM36 41h1v1h-1zM41 41h1v1h-1zM43 41h1v1h-1zM4 42h1v1h-1zM6 42h1v1h-1zM7 42h1v1h-1zM8 42h1v1h-1zM10 42h1v1h-1zM12 42h1v1h-1zM13 42h1v1h-1zM15 42h1v1h-1zM18 42h1v1h-1zM20 42h1v1h-1zM22 42h1v1h-1zM24 42h1v1h-1zM26 42h1v1h-1zM28 42h1v1h-1zM31 42h1v1h-1zM33 42h1v1h-1zM36 42h1v1h-1zM37 42h1v1h-1zM39 42h1v1h-1zM42 42h1v1h-1zM43 42h1v1h-1zM44 42h1v1h-1zM4 43h1v1h-1zM10 43h1v1h-1zM14 43h1v1h-1zM15 43h1v1h-1zM19 43h1v1h-1zM21 43h1v1h-1zM22 43h1v1h-1zM25 43h1v1h-1zM27 43h1v1h-1zM28 43h1v1h-1zM31 43h1v1h-1zM32 43h1v1h-1zM35 43h1v1h-1zM36 43h1v1h-1zM40 43h1v1h-1zM41 43h1v1h-1zM43 43h1v1h-1zM4 44h1v1h-1zM5 44h1v1h-1zM6 44h1v1h-1zM7 44h1v1h-1zM8 44h1v1h-1zM9 44h1v1h-1zM10 44h1v1h-1zM12 44h1v1h-1zM14 44h1v1h-1zM15 44h1v1h-1zM17 44h1v1h-1zM18 44h1v1h-1zM19 44h1v1h-1zM23 44h1v1h-1zM25 44h1v1h-1zM28 44h1v1h-1zM29 44h1v1h-1zM30 44h1v1h-1zM32 44h1v1h-1zM36 44h1v1h-1zM39 44h1v1h-1zM43 44h1v1h-1z"/></svg></div><div class="coffee-qrv" data-a="500"><svg role="img" aria-label="IPS QR kod 500 RSD" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 49 49" shape-rendering="crispEdges"><rect width="100%" height="100%" fill="#fff"/><path d="M4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM7 4h1v1h-1zM8 4h1v1h-1zM9 4h1v1h-1zM10 4h1v1h-1zM12 4h1v1h-1zM13 4h1v1h-1zM14 4h1v1h-1zM15 4h1v1h-1zM16 4h1v1h-1zM18 4h1v1h-1zM19 4h1v1h-1zM20 4h1v1h-1zM21 4h1v1h-1zM23 4h1v1h-1zM25 4h1v1h-1zM26 4h1v1h-1zM29 4h1v1h-1zM30 4h1v1h-1zM36 4h1v1h-1zM38 4h1v1h-1zM39 4h1v1h-1zM40 4h1v1h-1zM41 4h1v1h-1zM42 4h1v1h-1zM43 4h1v1h-1zM44 4h1v1h-1zM4 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM15 5h1v1h-1zM16 5h1v1h-1zM17 5h1v1h-1zM18 5h1v1h-1zM20 5h1v1h-1zM22 5h1v1h-1zM24 5h1v1h-1zM27 5h1v1h-1zM29 5h1v1h-1zM33 5h1v1h-1zM36 5h1v1h-1zM38 5h1v1h-1zM44 5h1v1h-1zM4 6h1v1h-1zM6 6h1v1h-1zM7 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM13 6h1v1h-1zM15 6h1v1h-1zM16 6h1v1h-1zM17 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM21 6h1v1h-1zM23 6h1v1h-1zM28 6h1v1h-1zM32 6h1v1h-1zM34 6h1v1h-1zM38 6h1v1h-1zM40 6h1v1h-1zM41 6h1v1h-1zM42 6h1v1h-1zM44 6h1v1h-1zM4 7h1v1h-1zM6 7h1v1h-1zM7 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM13 7h1v1h-1zM14 7h1v1h-1zM18 7h1v1h-1zM19 7h1v1h-1zM23 7h1v1h-1zM25 7h1v1h-1zM27 7h1v1h-1zM28 7h1v1h-1zM30 7h1v1h-1zM31 7h1v1h-1zM34 7h1v1h-1zM35 7h1v1h-1zM38 7h1v1h-1zM40 7h1v1h-1zM41 7h1v1h-1zM42 7h1v1h-1zM44 7h1v1h-1zM4 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM10 8h1v1h-1zM13 8h1v1h-1zM19 8h1v1h-1zM21 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM27 8h1v1h-1zM28 8h1v1h-1zM29 8h1v1h-1zM30 8h1v1h-1zM31 8h1v1h-1zM32 8h1v1h-1zM33 8h1v1h-1zM38 8h1v1h-1zM40 8h1v1h-1zM41 8h1v1h-1zM42 8h1v1h-1zM44 8h1v1h-1zM4 9h1v1h-1zM10 9h1v1h-1zM13 9h1v1h-1zM14 9h1v1h-1zM16 9h1v1h-1zM18 9h1v1h-1zM20 9h1v1h-1zM23 9h1v1h-1zM24 9h1v1h-1zM29 9h1v1h-1zM30 9h1v1h-1zM35 9h1v1h-1zM38 9h1v1h-1zM44 9h1v1h-1zM4 10h1v1h-1zM5 10h1v1h-1zM6 10h1v1h-1zM7 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM10 10h1v1h-1zM12 10h1v1h-1zM14 10h1v1h-1zM16 10h1v1h-1zM18 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h1v1h-1zM30 10h1v1h-1zM32 10h1v1h-1zM34 10h1v1h-1zM36 10h1v1h-1zM38 10h1v1h-1zM39 10h1v1h-1zM40 10h1v1h-1zM41 10h1v1h-1zM42 10h1v1h-1zM43 10h1v1h-1zM44 10h1v1h-1zM12 11h1v1h-1zM13 11h1v1h-1zM14 11h1v1h-1zM17 11h1v1h-1zM18 11h1v1h-1zM19 11h1v1h-1zM21 11h1v1h-1zM23 11h1v1h-1zM26 11h1v1h-1zM27 11h1v1h-1zM30 11h1v1h-1zM32 11h1v1h-1zM33 11h1v1h-1zM34 11h1v1h-1zM4 12h1v1h-1zM6 12h1v1h-1zM7 12h1v1h-1zM9 12h1v1h-1zM10 12h1v1h-1zM11 12h1v1h-1zM13 12h1v1h-1zM15 12h1v1h-1zM16 12h1v1h-1zM18 12h1v1h-1zM19 12h1v1h-1zM21 12h1v1h-1zM23 12h1v1h-1zM24 12h1v1h-1zM25 12h1v1h-1zM26 12h1v1h-1zM28 12h1v1h-1zM29 12h1v1h-1zM30 12h1v1h-1zM33 12h1v1h-1zM34 12h1v1h-1zM36 12h1v1h-1zM38 12h1v1h-1zM41 12h1v1h-1zM43 12h1v1h-1zM44 12h1v1h-1zM4 13h1v1h-1zM7 13h1v1h-1zM8 13h1v1h-1zM9 13h1v1h-1zM11 13h1v1h-1zM12 13h1v1h-1zM13 13h1v1h-1zM14 13h1v1h-1zM17 13h1v1h-1zM19 13h1v1h-1zM20 13h1v1h-1zM21 13h1v1h-1zM23 13h1v1h-1zM26 13h1v1h-1zM27 13h1v1h-1zM28 13h1v1h-1zM29 13h1v1h-1zM30 13h1v1h-1zM32 13h1v1h-1zM33 13h1v1h-1zM35 13h1v1h-1zM37 13h1v1h-1zM38 13h1v1h-1zM39 13h1v1h-1zM40 13h1v1h-1zM42 13h1v1h-1zM43 13h1v1h-1zM6 14h1v1h-1zM8 14h1v1h-1zM10 14h1v1h-1zM11 14h1v1h-1zM17 14h1v1h-1zM19 14h1v1h-1zM20 14h1v1h-1zM21 14h1v1h-1zM22 14h1v1h-1zM24 14h1v1h-1zM27 14h1v1h-1zM28 14h1v1h-1zM32 14h1v1h-1zM34 14h1v1h-1zM36 14h1v1h-1zM41 14h1v1h-1zM43 14h1v1h-1zM4 15h1v1h-1zM5 15h1v1h-1zM6 15h1v1h-1zM8 15h1v1h-1zM11 15h1v1h-1zM12 15h1v1h-1zM14 15h1v1h-1zM15 15h1v1h-1zM17 15h1v1h-1zM18 15h1v1h-1zM19 15h1v1h-1zM20 15h1v1h-1zM22 15h1v1h-1zM23 15h1v1h-1zM29 15h1v1h-1zM32 15h1v1h-1zM35 15h1v1h-1zM37 15h1v1h-1zM38 15h1v1h-1zM41 15h1v1h-1zM4 16h1v1h-1zM6 16h1v1h-1zM7 16h1v1h-1zM9 16h1v1h-1zM10 16h1v1h-1zM11 16h1v1h-1zM12 16h1v1h-1zM14 16h1v1h-1zM16 16h1v1h-1zM17 16h1v1h-1zM20 16h1v1h-1zM22 16h1v1h-1zM24 16h1v1h-1zM26 16h1v1h-1zM28 16h1v1h-1zM29 16h1v1h-1zM30 16h1v1h-1zM31 16h1v1h-1zM32 16h1v1h-1zM33 16h1v1h-1zM34 16h1v1h-1zM39 16h1v1h-1zM41 16h1v1h-1zM42 16h1v1h-1zM43 16h1v1h-1zM44 16h1v1h-1zM7 17h1v1h-1zM9 17h1v1h-1zM11 17h1v1h-1zM17 17h1v1h-1zM18 17h1v1h-1zM19 17h1v1h-1zM24 17h1v1h-1zM27 17h1v1h-1zM28 17h1v1h-1zM30 17h1v1h-1zM33 17h1v1h-1zM34 17h1v1h-1zM35 17h1v1h-1zM38 17h1v1h-1zM39 17h1v1h-1zM41 17h1v1h-1zM42 17h1v1h-1zM44 17h1v1h-1zM4 18h1v1h-1zM5 18h1v1h-1zM7 18h1v1h-1zM10 18h1v1h-1zM11 18h1v1h-1zM12 18h1v1h-1zM17 18h1v1h-1zM18 18h1v1h-1zM19 18h1v1h-1zM23 18h1v1h-1zM24 18h1v1h-1zM25 18h1v1h-1zM26 18h1v1h-1zM27 18h1v1h-1zM29 18h1v1h-1zM33 18h1v1h-1zM35 18h1v1h-1zM37 18h1v1h-1zM41 18h1v1h-1zM42 18h1v1h-1zM43 18h1v1h-1zM44 18h1v1h-1zM5 19h1v1h-1zM7 19h1v1h-1zM8 19h1v1h-1zM11 19h1v1h-1zM13 19h1v1h-1zM14 19h1v1h-1zM16 19h1v1h-1zM19 19h1v1h-1zM20 19h1v1h-1zM25 19h1v1h-1zM26 19h1v1h-1zM27 19h1v1h-1zM31 19h1v1h-1zM34 19h1v1h-1zM35 19h1v1h-1zM37 19h1v1h-1zM40 19h1v1h-1zM4 20h1v1h-1zM5 20h1v1h-1zM6 20h1v1h-1zM8 20h1v1h-1zM9 20h1v1h-1zM10 20h1v1h-1zM12 20h1v1h-1zM14 20h1v1h-1zM15 20h1v1h-1zM17 20h1v1h-1zM18 20h1v1h-1zM19 20h1v1h-1zM22 20h1v1h-1zM26 20h1v1h-1zM28 20h1v1h-1zM29 20h1v1h-1zM30 20h1v1h-1zM32 20h1v1h-1zM33 20h1v1h-1zM34 20h1v1h-1zM35 20h1v1h-1zM37 20h1v1h-1zM40 20h1v1h-1zM41 20h1v1h-1zM43 20h1v1h-1zM5 21h1v1h-1zM8 21h1v1h-1zM11 21h1v1h-1zM13 21h1v1h-1zM15 21h1v1h-1zM19 21h1v1h-1zM20 21h1v1h-1zM22 21h1v1h-1zM25 21h1v1h-1zM26 21h1v1h-1zM27 21h1v1h-1zM28 21h1v1h-1zM29 21h1v1h-1zM31 21h1v1h-1zM32 21h1v1h-1zM33 21h1v1h-1zM34 21h1v1h-1zM37 21h1v1h-1zM38 21h1v1h-1zM39 21h1v1h-1zM42 21h1v1h-1zM43 21h1v1h-1zM4 22h1v1h-1zM6 22h1v1h-1zM8 22h1v1h-1zM9 22h1v1h-1zM10 22h1v1h-1zM13 22h1v1h-1zM14 22h1v1h-1zM15 22h1v1h-1zM22 22h1v1h-1zM26 22h1v1h-1zM28 22h1v1h-1zM31 22h1v1h-1zM32 22h1v1h-1zM33 22h1v1h-1zM36 22h1v1h-1zM37 22h1v1h-1zM41 22h1v1h-1zM42 22h1v1h-1zM43 22h1v1h-1zM4 23h1v1h-1zM6 23h1v1h-1zM7 23h1v1h-1zM8 23h1v1h-1zM9 23h1v1h-1zM11 23h1v1h-1zM15 23h1v1h-1zM16 23h1v1h-1zM21 23h1v1h-1zM22 23h1v1h-1zM23 23h1v1h-1zM24 23h1v1h-1zM25 23h1v1h-1zM27 23h1v1h-1zM32 23h1v1h-1zM36 23h1v1h-1zM37 23h1v1h-1zM39 23h1v1h-1zM41 23h1v1h-1zM42 23h1v1h-1zM4 24h1v1h-1zM5 24h1v1h-1zM7 24h1v1h-1zM10 24h1v1h-1zM13 24h1v1h-1zM14 24h1v1h-1zM23 24h1v1h-1zM29 24h1v1h-1zM32 24h1v1h-1zM34 24h1v1h-1zM36 24h1v1h-1zM38 24h1v1h-1zM40 24h1v1h-1zM41 24h1v1h-1zM42 24h1v1h-1zM44 24h1v1h-1zM4 25h1v1h-1zM6 25h1v1h-1zM7 25h1v1h-1zM8 25h1v1h-1zM12 25h1v1h-1zM14 25h1v1h-1zM16 25h1v1h-1zM17 25h1v1h-1zM19 25h1v1h-1zM20 25h1v1h-1zM25 25h1v1h-1zM27 25h1v1h-1zM28 25h1v1h-1zM30 25h1v1h-1zM32 25h1v1h-1zM33 25h1v1h-1zM34 25h1v1h-1zM35 25h1v1h-1zM36 25h1v1h-1zM38 25h1v1h-1zM39 25h1v1h-1zM40 25h1v1h-1zM41 25h1v1h-1zM43 25h1v1h-1zM8 26h1v1h-1zM10 26h1v1h-1zM11 26h1v1h-1zM12 26h1v1h-1zM14 26h1v1h-1zM20 26h1v1h-1zM21 26h1v1h-1zM23 26h1v1h-1zM24 26h1v1h-1zM27 26h1v1h-1zM28 26h1v1h-1zM29 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM33 26h1v1h-1zM34 26h1v1h-1zM37 26h1v1h-1zM39 26h1v1h-1zM40 26h1v1h-1zM42 26h1v1h-1zM43 26h1v1h-1zM7 27h1v1h-1zM15 27h1v1h-1zM16 27h1v1h-1zM17 27h1v1h-1zM20 27h1v1h-1zM23 27h1v1h-1zM24 27h1v1h-1zM26 27h1v1h-1zM27 27h1v1h-1zM28 27h1v1h-1zM29 27h1v1h-1zM38 27h1v1h-1zM39 27h1v1h-1zM40 27h1v1h-1zM43 27h1v1h-1zM44 27h1v1h-1zM9 28h1v1h-1zM10 28h1v1h-1zM12 28h1v1h-1zM17 28h1v1h-1zM19 28h1v1h-1zM20 28h1v1h-1zM21 28h1v1h-1zM22 28h1v1h-1zM24 28h1v1h-1zM27 28h1v1h-1zM29 28h1v1h-1zM32 28h1v1h-1zM36 28h1v1h-1zM42 28h1v1h-1zM43 28h1v1h-1zM44 28h1v1h-1zM4 29h1v1h-1zM5 29h1v1h-1zM6 29h1v1h-1zM7 29h1v1h-1zM9 29h1v1h-1zM11 29h1v1h-1zM12 29h1v1h-1zM13 29h1v1h-1zM14 29h1v1h-1zM16 29h1v1h-1zM22 29h1v1h-1zM23 29h1v1h-1zM24 29h1v1h-1zM25 29h1v1h-1zM26 29h1v1h-1zM29 29h1v1h-1zM31 29h1v1h-1zM35 29h1v1h-1zM36 29h1v1h-1zM37 29h1v1h-1zM38 29h1v1h-1zM43 29h1v1h-1zM44 29h1v1h-1zM6 30h1v1h-1zM8 30h1v1h-1zM9 30h1v1h-1zM10 30h1v1h-1zM11 30h1v1h-1zM13 30h1v1h-1zM14 30h1v1h-1zM15 30h1v1h-1zM18 30h1v1h-1zM19 30h1v1h-1zM20 30h1v1h-1zM21 30h1v1h-1zM23 30h1v1h-1zM28 30h1v1h-1zM32 30h1v1h-1zM33 30h1v1h-1zM35 30h1v1h-1zM38 30h1v1h-1zM40 30h1v1h-1zM41 30h1v1h-1zM42 30h1v1h-1zM44 30h1v1h-1zM5 31h1v1h-1zM6 31h1v1h-1zM7 31h1v1h-1zM9 31h1v1h-1zM11 31h1v1h-1zM12 31h1v1h-1zM15 31h1v1h-1zM17 31h1v1h-1zM22 31h1v1h-1zM25 31h1v1h-1zM28 31h1v1h-1zM33 31h1v1h-1zM34 31h1v1h-1zM35 31h1v1h-1zM38 31h1v1h-1zM40 31h1v1h-1zM41 31h1v1h-1zM44 31h1v1h-1zM4 32h1v1h-1zM5 32h1v1h-1zM6 32h1v1h-1zM8 32h1v1h-1zM10 32h1v1h-1zM11 32h1v1h-1zM13 32h1v1h-1zM14 32h1v1h-1zM15 32h1v1h-1zM16 32h1v1h-1zM17 32h1v1h-1zM21 32h1v1h-1zM22 32h1v1h-1zM24 32h1v1h-1zM25 32h1v1h-1zM26 32h1v1h-1zM27 32h1v1h-1zM28 32h1v1h-1zM29 32h1v1h-1zM31 32h1v1h-1zM33 32h1v1h-1zM34 32h1v1h-1zM35 32h1v1h-1zM36 32h1v1h-1zM37 32h1v1h-1zM40 32h1v1h-1zM41 32h1v1h-1zM42 32h1v1h-1zM5 33h1v1h-1zM6 33h1v1h-1zM9 33h1v1h-1zM11 33h1v1h-1zM15 33h1v1h-1zM16 33h1v1h-1zM17 33h1v1h-1zM21 33h1v1h-1zM23 33h1v1h-1zM24 33h1v1h-1zM26 33h1v1h-1zM36 33h1v1h-1zM41 33h1v1h-1zM42 33h1v1h-1zM4 34h1v1h-1zM6 34h1v1h-1zM7 34h1v1h-1zM9 34h1v1h-1zM10 34h1v1h-1zM11 34h1v1h-1zM12 34h1v1h-1zM13 34h1v1h-1zM14 34h1v1h-1zM15 34h1v1h-1zM16 34h1v1h-1zM18 34h1v1h-1zM23 34h1v1h-1zM26 34h1v1h-1zM30 34h1v1h-1zM33 34h1v1h-1zM34 34h1v1h-1zM36 34h1v1h-1zM39 34h1v1h-1zM40 34h1v1h-1zM6 35h1v1h-1zM7 35h1v1h-1zM8 35h1v1h-1zM9 35h1v1h-1zM13 35h1v1h-1zM16 35h1v1h-1zM18 35h1v1h-1zM19 35h1v1h-1zM21 35h1v1h-1zM23 35h1v1h-1zM27 35h1v1h-1zM30 35h1v1h-1zM31 35h1v1h-1zM32 35h1v1h-1zM33 35h1v1h-1zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM39 35h1v1h-1zM42 35h1v1h-1zM44 35h1v1h-1zM5 36h1v1h-1zM7 36h1v1h-1zM9 36h1v1h-1zM10 36h1v1h-1zM12 36h1v1h-1zM15 36h1v1h-1zM17 36h1v1h-1zM18 36h1v1h-1zM20 36h1v1h-1zM22 36h1v1h-1zM24 36h1v1h-1zM25 36h1v1h-1zM26 36h1v1h-1zM28 36h1v1h-1zM31 36h1v1h-1zM34 36h1v1h-1zM36 36h1v1h-1zM37 36h1v1h-1zM38 36h1v1h-1zM39 36h1v1h-1zM40 36h1v1h-1zM42 36h1v1h-1zM44 36h1v1h-1zM12 37h1v1h-1zM16 37h1v1h-1zM17 37h1v1h-1zM18 37h1v1h-1zM20 37h1v1h-1zM21 37h1v1h-1zM23 37h1v1h-1zM25 37h1v1h-1zM26 37h1v1h-1zM27 37h1v1h-1zM28 37h1v1h-1zM29 37h1v1h-1zM30 37h1v1h-1zM34 37h1v1h-1zM36 37h1v1h-1zM40 37h1v1h-1zM41 37h1v1h-1zM44 37h1v1h-1zM4 38h1v1h-1zM5 38h1v1h-1zM6 38h1v1h-1zM7 38h1v1h-1zM8 38h1v1h-1zM9 38h1v1h-1zM10 38h1v1h-1zM12 38h1v1h-1zM15 38h1v1h-1zM20 38h1v1h-1zM22 38h1v1h-1zM24 38h1v1h-1zM27 38h1v1h-1zM29 38h1v1h-1zM33 38h1v1h-1zM36 38h1v1h-1zM38 38h1v1h-1zM40 38h1v1h-1zM41 38h1v1h-1zM4 39h1v1h-1zM10 39h1v1h-1zM12 39h1v1h-1zM18 39h1v1h-1zM20 39h1v1h-1zM21 39h1v1h-1zM34 39h1v1h-1zM36 39h1v1h-1zM40 39h1v1h-1zM44 39h1v1h-1zM4 40h1v1h-1zM6 40h1v1h-1zM7 40h1v1h-1zM8 40h1v1h-1zM10 40h1v1h-1zM13 40h1v1h-1zM18 40h1v1h-1zM20 40h1v1h-1zM23 40h1v1h-1zM25 40h1v1h-1zM28 40h1v1h-1zM30 40h1v1h-1zM31 40h1v1h-1zM32 40h1v1h-1zM34 40h1v1h-1zM36 40h1v1h-1zM37 40h1v1h-1zM38 40h1v1h-1zM39 40h1v1h-1zM40 40h1v1h-1zM41 40h1v1h-1zM42 40h1v1h-1zM43 40h1v1h-1zM4 41h1v1h-1zM6 41h1v1h-1zM7 41h1v1h-1zM8 41h1v1h-1zM10 41h1v1h-1zM12 41h1v1h-1zM13 41h1v1h-1zM14 41h1v1h-1zM15 41h1v1h-1zM18 41h1v1h-1zM20 41h1v1h-1zM21 41h1v1h-1zM26 41h1v1h-1zM28 41h1v1h-1zM29 41h1v1h-1zM30 41h1v1h-1zM31 41h1v1h-1zM33 41h1v1h-1zM34 41h1v1h-1zM36 41h1v1h-1zM41 41h1v1h-1zM43 41h1v1h-1zM4 42h1v1h-1zM6 42h1v1h-1zM7 42h1v1h-1zM8 42h1v1h-1zM10 42h1v1h-1zM12 42h1v1h-1zM13 42h1v1h-1zM15 42h1v1h-1zM18 42h1v1h-1zM20 42h1v1h-1zM22 42h1v1h-1zM24 42h1v1h-1zM26 42h1v1h-1zM28 42h1v1h-1zM31 42h1v1h-1zM33 42h1v1h-1zM36 42h1v1h-1zM37 42h1v1h-1zM39 42h1v1h-1zM42 42h1v1h-1zM43 42h1v1h-1zM44 42h1v1h-1zM4 43h1v1h-1zM10 43h1v1h-1zM14 43h1v1h-1zM15 43h1v1h-1zM19 43h1v1h-1zM21 43h1v1h-1zM22 43h1v1h-1zM25 43h1v1h-1zM27 43h1v1h-1zM28 43h1v1h-1zM31 43h1v1h-1zM32 43h1v1h-1zM35 43h1v1h-1zM36 43h1v1h-1zM40 43h1v1h-1zM41 43h1v1h-1zM43 43h1v1h-1zM4 44h1v1h-1zM5 44h1v1h-1zM6 44h1v1h-1zM7 44h1v1h-1zM8 44h1v1h-1zM9 44h1v1h-1zM10 44h1v1h-1zM12 44h1v1h-1zM14 44h1v1h-1zM15 44h1v1h-1zM17 44h1v1h-1zM18 44h1v1h-1zM19 44h1v1h-1zM23 44h1v1h-1zM25 44h1v1h-1zM28 44h1v1h-1zM29 44h1v1h-1zM30 44h1v1h-1zM32 44h1v1h-1zM36 44h1v1h-1zM39 44h1v1h-1zM43 44h1v1h-1z"/></svg></div><div class="coffee-qrv" data-a="1000" hidden><svg role="img" aria-label="IPS QR kod 1000 RSD" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 49 49" shape-rendering="crispEdges"><rect width="100%" height="100%" fill="#fff"/><path d="M4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM7 4h1v1h-1zM8 4h1v1h-1zM9 4h1v1h-1zM10 4h1v1h-1zM13 4h1v1h-1zM14 4h1v1h-1zM15 4h1v1h-1zM18 4h1v1h-1zM19 4h1v1h-1zM21 4h1v1h-1zM24 4h1v1h-1zM29 4h1v1h-1zM32 4h1v1h-1zM35 4h1v1h-1zM38 4h1v1h-1zM39 4h1v1h-1zM40 4h1v1h-1zM41 4h1v1h-1zM42 4h1v1h-1zM43 4h1v1h-1zM44 4h1v1h-1zM4 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM15 5h1v1h-1zM20 5h1v1h-1zM22 5h1v1h-1zM25 5h1v1h-1zM26 5h1v1h-1zM28 5h1v1h-1zM33 5h1v1h-1zM34 5h1v1h-1zM38 5h1v1h-1zM44 5h1v1h-1zM4 6h1v1h-1zM6 6h1v1h-1zM7 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM13 6h1v1h-1zM14 6h1v1h-1zM15 6h1v1h-1zM17 6h1v1h-1zM19 6h1v1h-1zM23 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM31 6h1v1h-1zM34 6h1v1h-1zM35 6h1v1h-1zM38 6h1v1h-1zM40 6h1v1h-1zM41 6h1v1h-1zM42 6h1v1h-1zM44 6h1v1h-1zM4 7h1v1h-1zM6 7h1v1h-1zM7 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM13 7h1v1h-1zM17 7h1v1h-1zM19 7h1v1h-1zM20 7h1v1h-1zM22 7h1v1h-1zM24 7h1v1h-1zM28 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM33 7h1v1h-1zM35 7h1v1h-1zM36 7h1v1h-1zM38 7h1v1h-1zM40 7h1v1h-1zM41 7h1v1h-1zM42 7h1v1h-1zM44 7h1v1h-1zM4 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM10 8h1v1h-1zM13 8h1v1h-1zM15 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM25 8h1v1h-1zM29 8h1v1h-1zM30 8h1v1h-1zM32 8h1v1h-1zM34 8h1v1h-1zM36 8h1v1h-1zM38 8h1v1h-1zM40 8h1v1h-1zM41 8h1v1h-1zM42 8h1v1h-1zM44 8h1v1h-1zM4 9h1v1h-1zM10 9h1v1h-1zM13 9h1v1h-1zM14 9h1v1h-1zM17 9h1v1h-1zM18 9h1v1h-1zM22 9h1v1h-1zM24 9h1v1h-1zM26 9h1v1h-1zM28 9h1v1h-1zM30 9h1v1h-1zM32 9h1v1h-1zM34 9h1v1h-1zM38 9h1v1h-1zM44 9h1v1h-1zM4 10h1v1h-1zM5 10h1v1h-1zM6 10h1v1h-1zM7 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM10 10h1v1h-1zM12 10h1v1h-1zM14 10h1v1h-1zM16 10h1v1h-1zM18 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h1v1h-1zM30 10h1v1h-1zM32 10h1v1h-1zM34 10h1v1h-1zM36 10h1v1h-1zM38 10h1v1h-1zM39 10h1v1h-1zM40 10h1v1h-1zM41 10h1v1h-1zM42 10h1v1h-1zM43 10h1v1h-1zM44 10h1v1h-1zM12 11h1v1h-1zM14 11h1v1h-1zM15 11h1v1h-1zM16 11h1v1h-1zM19 11h1v1h-1zM22 11h1v1h-1zM23 11h1v1h-1zM24 11h1v1h-1zM26 11h1v1h-1zM28 11h1v1h-1zM32 11h1v1h-1zM36 11h1v1h-1zM4 12h1v1h-1zM10 12h1v1h-1zM12 12h1v1h-1zM13 12h1v1h-1zM15 12h1v1h-1zM16 12h1v1h-1zM20 12h1v1h-1zM21 12h1v1h-1zM22 12h1v1h-1zM24 12h1v1h-1zM30 12h1v1h-1zM31 12h1v1h-1zM32 12h1v1h-1zM33 12h1v1h-1zM35 12h1v1h-1zM36 12h1v1h-1zM37 12h1v1h-1zM38 12h1v1h-1zM41 12h1v1h-1zM42 12h1v1h-1zM43 12h1v1h-1zM6 13h1v1h-1zM7 13h1v1h-1zM9 13h1v1h-1zM11 13h1v1h-1zM14 13h1v1h-1zM16 13h1v1h-1zM17 13h1v1h-1zM18 13h1v1h-1zM21 13h1v1h-1zM23 13h1v1h-1zM24 13h1v1h-1zM25 13h1v1h-1zM27 13h1v1h-1zM28 13h1v1h-1zM29 13h1v1h-1zM31 13h1v1h-1zM33 13h1v1h-1zM35 13h1v1h-1zM36 13h1v1h-1zM39 13h1v1h-1zM40 13h1v1h-1zM43 13h1v1h-1zM7 14h1v1h-1zM9 14h1v1h-1zM10 14h1v1h-1zM12 14h1v1h-1zM13 14h1v1h-1zM16 14h1v1h-1zM17 14h1v1h-1zM18 14h1v1h-1zM19 14h1v1h-1zM20 14h1v1h-1zM25 14h1v1h-1zM30 14h1v1h-1zM31 14h1v1h-1zM32 14h1v1h-1zM33 14h1v1h-1zM38 14h1v1h-1zM39 14h1v1h-1zM40 14h1v1h-1zM41 14h1v1h-1zM42 14h1v1h-1zM43 14h1v1h-1zM4 15h1v1h-1zM6 15h1v1h-1zM7 15h1v1h-1zM15 15h1v1h-1zM16 15h1v1h-1zM18 15h1v1h-1zM26 15h1v1h-1zM28 15h1v1h-1zM34 15h1v1h-1zM38 15h1v1h-1zM40 15h1v1h-1zM43 15h1v1h-1zM44 15h1v1h-1zM4 16h1v1h-1zM5 16h1v1h-1zM6 16h1v1h-1zM7 16h1v1h-1zM9 16h1v1h-1zM10 16h1v1h-1zM15 16h1v1h-1zM18 16h1v1h-1zM20 16h1v1h-1zM21 16h1v1h-1zM22 16h1v1h-1zM23 16h1v1h-1zM24 16h1v1h-1zM27 16h1v1h-1zM31 16h1v1h-1zM32 16h1v1h-1zM34 16h1v1h-1zM35 16h1v1h-1zM36 16h1v1h-1zM38 16h1v1h-1zM43 16h1v1h-1zM44 16h1v1h-1zM5 17h1v1h-1zM6 17h1v1h-1zM7 17h1v1h-1zM8 17h1v1h-1zM9 17h1v1h-1zM11 17h1v1h-1zM12 17h1v1h-1zM13 17h1v1h-1zM15 17h1v1h-1zM17 17h1v1h-1zM20 17h1v1h-1zM21 17h1v1h-1zM22 17h1v1h-1zM24 17h1v1h-1zM25 17h1v1h-1zM28 17h1v1h-1zM32 17h1v1h-1zM35 17h1v1h-1zM36 17h1v1h-1zM38 17h1v1h-1zM40 17h1v1h-1zM41 17h1v1h-1zM44 17h1v1h-1zM8 18h1v1h-1zM10 18h1v1h-1zM12 18h1v1h-1zM13 18h1v1h-1zM16 18h1v1h-1zM17 18h1v1h-1zM18 18h1v1h-1zM19 18h1v1h-1zM20 18h1v1h-1zM22 18h1v1h-1zM23 18h1v1h-1zM25 18h1v1h-1zM26 18h1v1h-1zM33 18h1v1h-1zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM40 18h1v1h-1zM42 18h1v1h-1zM4 19h1v1h-1zM5 19h1v1h-1zM6 19h1v1h-1zM11 19h1v1h-1zM12 19h1v1h-1zM14 19h1v1h-1zM18 19h1v1h-1zM19 19h1v1h-1zM20 19h1v1h-1zM22 19h1v1h-1zM23 19h1v1h-1zM26 19h1v1h-1zM28 19h1v1h-1zM30 19h1v1h-1zM31 19h1v1h-1zM34 19h1v1h-1zM36 19h1v1h-1zM38 19h1v1h-1zM40 19h1v1h-1zM42 19h1v1h-1zM43 19h1v1h-1zM44 19h1v1h-1zM4 20h1v1h-1zM9 20h1v1h-1zM10 20h1v1h-1zM12 20h1v1h-1zM16 20h1v1h-1zM17 20h1v1h-1zM21 20h1v1h-1zM22 20h1v1h-1zM23 20h1v1h-1zM24 20h1v1h-1zM25 20h1v1h-1zM26 20h1v1h-1zM29 20h1v1h-1zM32 20h1v1h-1zM35 20h1v1h-1zM36 20h1v1h-1zM39 20h1v1h-1zM41 20h1v1h-1zM42 20h1v1h-1zM4 21h1v1h-1zM5 21h1v1h-1zM6 21h1v1h-1zM7 21h1v1h-1zM9 21h1v1h-1zM11 21h1v1h-1zM12 21h1v1h-1zM13 21h1v1h-1zM15 21h1v1h-1zM16 21h1v1h-1zM19 21h1v1h-1zM20 21h1v1h-1zM21 21h1v1h-1zM23 21h1v1h-1zM26 21h1v1h-1zM27 21h1v1h-1zM28 21h1v1h-1zM29 21h1v1h-1zM30 21h1v1h-1zM31 21h1v1h-1zM35 21h1v1h-1zM37 21h1v1h-1zM39 21h1v1h-1zM40 21h1v1h-1zM41 21h1v1h-1zM42 21h1v1h-1zM43 21h1v1h-1zM44 21h1v1h-1zM4 22h1v1h-1zM5 22h1v1h-1zM6 22h1v1h-1zM7 22h1v1h-1zM10 22h1v1h-1zM11 22h1v1h-1zM12 22h1v1h-1zM16 22h1v1h-1zM17 22h1v1h-1zM23 22h1v1h-1zM24 22h1v1h-1zM25 22h1v1h-1zM26 22h1v1h-1zM27 22h1v1h-1zM28 22h1v1h-1zM31 22h1v1h-1zM33 22h1v1h-1zM34 22h1v1h-1zM35 22h1v1h-1zM37 22h1v1h-1zM38 22h1v1h-1zM39 22h1v1h-1zM43 22h1v1h-1zM44 22h1v1h-1zM8 23h1v1h-1zM12 23h1v1h-1zM13 23h1v1h-1zM15 23h1v1h-1zM17 23h1v1h-1zM21 23h1v1h-1zM22 23h1v1h-1zM23 23h1v1h-1zM26 23h1v1h-1zM28 23h1v1h-1zM29 23h1v1h-1zM37 23h1v1h-1zM40 23h1v1h-1zM41 23h1v1h-1zM6 24h1v1h-1zM8 24h1v1h-1zM10 24h1v1h-1zM11 24h1v1h-1zM12 24h1v1h-1zM13 24h1v1h-1zM16 24h1v1h-1zM18 24h1v1h-1zM19 24h1v1h-1zM20 24h1v1h-1zM23 24h1v1h-1zM25 24h1v1h-1zM28 24h1v1h-1zM30 24h1v1h-1zM31 24h1v1h-1zM34 24h1v1h-1zM35 24h1v1h-1zM36 24h1v1h-1zM37 24h1v1h-1zM42 24h1v1h-1zM43 24h1v1h-1zM4 25h1v1h-1zM7 25h1v1h-1zM14 25h1v1h-1zM16 25h1v1h-1zM22 25h1v1h-1zM24 25h1v1h-1zM27 25h1v1h-1zM28 25h1v1h-1zM30 25h1v1h-1zM31 25h1v1h-1zM33 25h1v1h-1zM34 25h1v1h-1zM35 25h1v1h-1zM37 25h1v1h-1zM39 25h1v1h-1zM40 25h1v1h-1zM44 25h1v1h-1zM6 26h1v1h-1zM8 26h1v1h-1zM9 26h1v1h-1zM10 26h1v1h-1zM11 26h1v1h-1zM12 26h1v1h-1zM13 26h1v1h-1zM15 26h1v1h-1zM16 26h1v1h-1zM19 26h1v1h-1zM20 26h1v1h-1zM22 26h1v1h-1zM23 26h1v1h-1zM25 26h1v1h-1zM29 26h1v1h-1zM31 26h1v1h-1zM32 26h1v1h-1zM36 26h1v1h-1zM39 26h1v1h-1zM42 26h1v1h-1zM4 27h1v1h-1zM5 27h1v1h-1zM6 27h1v1h-1zM7 27h1v1h-1zM8 27h1v1h-1zM9 27h1v1h-1zM11 27h1v1h-1zM13 27h1v1h-1zM15 27h1v1h-1zM17 27h1v1h-1zM18 27h1v1h-1zM22 27h1v1h-1zM24 27h1v1h-1zM27 27h1v1h-1zM32 27h1v1h-1zM34 27h1v1h-1zM35 27h1v1h-1zM39 27h1v1h-1zM41 27h1v1h-1zM44 27h1v1h-1zM4 28h1v1h-1zM5 28h1v1h-1zM7 28h1v1h-1zM10 28h1v1h-1zM11 28h1v1h-1zM12 28h1v1h-1zM14 28h1v1h-1zM15 28h1v1h-1zM16 28h1v1h-1zM17 28h1v1h-1zM19 28h1v1h-1zM20 28h1v1h-1zM22 28h1v1h-1zM23 28h1v1h-1zM26 28h1v1h-1zM30 28h1v1h-1zM33 28h1v1h-1zM35 28h1v1h-1zM38 28h1v1h-1zM39 28h1v1h-1zM41 28h1v1h-1zM42 28h1v1h-1zM43 28h1v1h-1zM4 29h1v1h-1zM5 29h1v1h-1zM8 29h1v1h-1zM11 29h1v1h-1zM12 29h1v1h-1zM13 29h1v1h-1zM16 29h1v1h-1zM20 29h1v1h-1zM21 29h1v1h-1zM23 29h1v1h-1zM25 29h1v1h-1zM26 29h1v1h-1zM27 29h1v1h-1zM28 29h1v1h-1zM29 29h1v1h-1zM30 29h1v1h-1zM31 29h1v1h-1zM33 29h1v1h-1zM34 29h1v1h-1zM35 29h1v1h-1zM37 29h1v1h-1zM38 29h1v1h-1zM39 29h1v1h-1zM40 29h1v1h-1zM42 29h1v1h-1zM43 29h1v1h-1zM4 30h1v1h-1zM5 30h1v1h-1zM8 30h1v1h-1zM10 30h1v1h-1zM11 30h1v1h-1zM16 30h1v1h-1zM17 30h1v1h-1zM18 30h1v1h-1zM21 30h1v1h-1zM22 30h1v1h-1zM25 30h1v1h-1zM26 30h1v1h-1zM29 30h1v1h-1zM31 30h1v1h-1zM33 30h1v1h-1zM34 30h1v1h-1zM37 30h1v1h-1zM42 30h1v1h-1zM6 31h1v1h-1zM7 31h1v1h-1zM11 31h1v1h-1zM12 31h1v1h-1zM13 31h1v1h-1zM14 31h1v1h-1zM17 31h1v1h-1zM18 31h1v1h-1zM19 31h1v1h-1zM22 31h1v1h-1zM24 31h1v1h-1zM26 31h1v1h-1zM28 31h1v1h-1zM30 31h1v1h-1zM31 31h1v1h-1zM32 31h1v1h-1zM33 31h1v1h-1zM34 31h1v1h-1zM35 31h1v1h-1zM36 31h1v1h-1zM37 31h1v1h-1zM38 31h1v1h-1zM40 31h1v1h-1zM41 31h1v1h-1zM42 31h1v1h-1zM44 31h1v1h-1zM7 32h1v1h-1zM8 32h1v1h-1zM10 32h1v1h-1zM12 32h1v1h-1zM14 32h1v1h-1zM16 32h1v1h-1zM17 32h1v1h-1zM18 32h1v1h-1zM19 32h1v1h-1zM24 32h1v1h-1zM26 32h1v1h-1zM28 32h1v1h-1zM29 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM35 32h1v1h-1zM39 32h1v1h-1zM41 32h1v1h-1zM44 32h1v1h-1zM4 33h1v1h-1zM6 33h1v1h-1zM8 33h1v1h-1zM14 33h1v1h-1zM15 33h1v1h-1zM17 33h1v1h-1zM20 33h1v1h-1zM21 33h1v1h-1zM22 33h1v1h-1zM34 33h1v1h-1zM35 33h1v1h-1zM36 33h1v1h-1zM38 33h1v1h-1zM40 33h1v1h-1zM42 33h1v1h-1zM44 33h1v1h-1zM4 34h1v1h-1zM5 34h1v1h-1zM7 34h1v1h-1zM10 34h1v1h-1zM13 34h1v1h-1zM14 34h1v1h-1zM15 34h1v1h-1zM19 34h1v1h-1zM20 34h1v1h-1zM21 34h1v1h-1zM22 34h1v1h-1zM23 34h1v1h-1zM26 34h1v1h-1zM28 34h1v1h-1zM29 34h1v1h-1zM30 34h1v1h-1zM31 34h1v1h-1zM34 34h1v1h-1zM35 34h1v1h-1zM38 34h1v1h-1zM40 34h1v1h-1zM41 34h1v1h-1zM42 34h1v1h-1zM44 34h1v1h-1zM4 35h1v1h-1zM7 35h1v1h-1zM9 35h1v1h-1zM12 35h1v1h-1zM16 35h1v1h-1zM18 35h1v1h-1zM19 35h1v1h-1zM20 35h1v1h-1zM26 35h1v1h-1zM27 35h1v1h-1zM35 35h1v1h-1zM38 35h1v1h-1zM40 35h1v1h-1zM44 35h1v1h-1zM4 36h1v1h-1zM7 36h1v1h-1zM8 36h1v1h-1zM10 36h1v1h-1zM11 36h1v1h-1zM15 36h1v1h-1zM18 36h1v1h-1zM21 36h1v1h-1zM24 36h1v1h-1zM25 36h1v1h-1zM26 36h1v1h-1zM27 36h1v1h-1zM29 36h1v1h-1zM31 36h1v1h-1zM32 36h1v1h-1zM36 36h1v1h-1zM37 36h1v1h-1zM38 36h1v1h-1zM39 36h1v1h-1zM40 36h1v1h-1zM41 36h1v1h-1zM42 36h1v1h-1zM43 36h1v1h-1zM12 37h1v1h-1zM16 37h1v1h-1zM17 37h1v1h-1zM18 37h1v1h-1zM19 37h1v1h-1zM23 37h1v1h-1zM24 37h1v1h-1zM25 37h1v1h-1zM26 37h1v1h-1zM27 37h1v1h-1zM28 37h1v1h-1zM30 37h1v1h-1zM31 37h1v1h-1zM32 37h1v1h-1zM33 37h1v1h-1zM34 37h1v1h-1zM36 37h1v1h-1zM40 37h1v1h-1zM41 37h1v1h-1zM42 37h1v1h-1zM43 37h1v1h-1zM4 38h1v1h-1zM5 38h1v1h-1zM6 38h1v1h-1zM7 38h1v1h-1zM8 38h1v1h-1zM9 38h1v1h-1zM10 38h1v1h-1zM14 38h1v1h-1zM22 38h1v1h-1zM26 38h1v1h-1zM28 38h1v1h-1zM31 38h1v1h-1zM33 38h1v1h-1zM36 38h1v1h-1zM38 38h1v1h-1zM40 38h1v1h-1zM41 38h1v1h-1zM42 38h1v1h-1zM43 38h1v1h-1zM4 39h1v1h-1zM10 39h1v1h-1zM13 39h1v1h-1zM15 39h1v1h-1zM18 39h1v1h-1zM20 39h1v1h-1zM23 39h1v1h-1zM24 39h1v1h-1zM25 39h1v1h-1zM30 39h1v1h-1zM32 39h1v1h-1zM33 39h1v1h-1zM34 39h1v1h-1zM35 39h1v1h-1zM36 39h1v1h-1zM40 39h1v1h-1zM41 39h1v1h-1zM4 40h1v1h-1zM6 40h1v1h-1zM7 40h1v1h-1zM8 40h1v1h-1zM10 40h1v1h-1zM13 40h1v1h-1zM15 40h1v1h-1zM17 40h1v1h-1zM21 40h1v1h-1zM22 40h1v1h-1zM23 40h1v1h-1zM24 40h1v1h-1zM25 40h1v1h-1zM28 40h1v1h-1zM29 40h1v1h-1zM30 40h1v1h-1zM31 40h1v1h-1zM33 40h1v1h-1zM35 40h1v1h-1zM36 40h1v1h-1zM37 40h1v1h-1zM38 40h1v1h-1zM39 40h1v1h-1zM40 40h1v1h-1zM43 40h1v1h-1zM44 40h1v1h-1zM4 41h1v1h-1zM6 41h1v1h-1zM7 41h1v1h-1zM8 41h1v1h-1zM10 41h1v1h-1zM14 41h1v1h-1zM16 41h1v1h-1zM20 41h1v1h-1zM21 41h1v1h-1zM24 41h1v1h-1zM27 41h1v1h-1zM29 41h1v1h-1zM30 41h1v1h-1zM31 41h1v1h-1zM34 41h1v1h-1zM39 41h1v1h-1zM40 41h1v1h-1zM41 41h1v1h-1zM43 41h1v1h-1zM4 42h1v1h-1zM6 42h1v1h-1zM7 42h1v1h-1zM8 42h1v1h-1zM10 42h1v1h-1zM13 42h1v1h-1zM14 42h1v1h-1zM15 42h1v1h-1zM16 42h1v1h-1zM17 42h1v1h-1zM18 42h1v1h-1zM19 42h1v1h-1zM22 42h1v1h-1zM23 42h1v1h-1zM24 42h1v1h-1zM25 42h1v1h-1zM29 42h1v1h-1zM32 42h1v1h-1zM33 42h1v1h-1zM34 42h1v1h-1zM35 42h1v1h-1zM36 42h1v1h-1zM38 42h1v1h-1zM39 42h1v1h-1zM40 42h1v1h-1zM4 43h1v1h-1zM10 43h1v1h-1zM14 43h1v1h-1zM15 43h1v1h-1zM17 43h1v1h-1zM18 43h1v1h-1zM20 43h1v1h-1zM21 43h1v1h-1zM22 43h1v1h-1zM24 43h1v1h-1zM26 43h1v1h-1zM27 43h1v1h-1zM28 43h1v1h-1zM30 43h1v1h-1zM35 43h1v1h-1zM37 43h1v1h-1zM38 43h1v1h-1zM40 43h1v1h-1zM41 43h1v1h-1zM42 43h1v1h-1zM44 43h1v1h-1zM4 44h1v1h-1zM5 44h1v1h-1zM6 44h1v1h-1zM7 44h1v1h-1zM8 44h1v1h-1zM9 44h1v1h-1zM10 44h1v1h-1zM12 44h1v1h-1zM14 44h1v1h-1zM17 44h1v1h-1zM20 44h1v1h-1zM23 44h1v1h-1zM24 44h1v1h-1zM27 44h1v1h-1zM29 44h1v1h-1zM31 44h1v1h-1zM32 44h1v1h-1zM33 44h1v1h-1zM34 44h1v1h-1zM37 44h1v1h-1zM40 44h1v1h-1zM42 44h1v1h-1z"/></svg></div></div><p class="small muted">Izaberi iznos, pa u mobilnoj banci odaberi „IPS skeniraj“ i skeniraj QR kod</p><p>Hvala!</p></div></div>
+<script>(function(){var o=document.getElementById('coffeeOv');function c(){o.classList.remove('open')}window.coffeeOpen=function(){o.classList.add('open')};document.getElementById('coffeeX').onclick=c;o.addEventListener('click',function(e){if(e.target===o)c()});document.addEventListener('keydown',function(e){if(e.key==='Escape')c()});Array.prototype.forEach.call(document.querySelectorAll('.coffee-amts button'),function(b){b.onclick=function(){var a=b.getAttribute('data-a');Array.prototype.forEach.call(document.querySelectorAll('.coffee-amts button'),function(x){x.classList.toggle('on',x===b)});Array.prototype.forEach.call(document.querySelectorAll('.coffee-qrv'),function(v){v.hidden=v.getAttribute('data-a')!==a})}});document.getElementById('coffeeCopy').onclick=function(){var t='115000000006810143',x=this;function ok(){x.textContent='Kopirano \u2713';setTimeout(function(){x.textContent='Kopiraj broj računa'},1800)}try{navigator.clipboard.writeText(t).then(ok,function(){})}catch(e){}}})();</script>
 </body>
 </html>
