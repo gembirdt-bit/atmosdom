@@ -62,6 +62,10 @@ HTML, CSS i JavaScript bez okvira, Service Worker, Web App Manifest, Web Share A
 
 **Gemb-Bit Željko Ilić**
 
+Ako Vam se dopadaju moje aplikacije i želite da uplatite neki simboličan iznos za kafu ili ručak :D 
+Možete donirati na račun: 115000000006810143 Željko Ilić, Beograd. 
+Hvala!
+
 ## Licenca
 
 Aplikaciju moižete slobodno koristiti uz uslov da ostavite credits link ka autoru - ako radite clone.
