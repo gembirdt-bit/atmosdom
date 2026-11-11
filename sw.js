@@ -1,4 +1,4 @@
-const CACHE = 'atmos-dom-v1';
+const CACHE = 'atmos-dom-v4';
 const ASSETS = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', e => {
@@ -17,6 +17,8 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
+  /* provera nove verzije traži sveže sa servera (cache: 'no-store' / 'reload'), pa ne sme da dobije staru kopiju iz keša */
+  if (req.cache === 'no-store' || req.cache === 'reload') return;
   e.respondWith(
     caches.match(req, { ignoreSearch: true }).then(hit => {
       const net = fetch(req).then(res => {
