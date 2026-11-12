@@ -56,6 +56,8 @@ Zatim otvori `http://localhost:8080`. Service worker i instalacija rade na `loca
 - Redovno pravi rezervnu kopiju (izvoz). Brisanje podataka pregledača briše i podatke aplikacije.
 - OCR koristi [Tesseract.js](https://github.com/naptha/tesseract.js) učitan sa CDN-a; prvi put je potreban internet (jezički paket ~10 MB, zatim se pamti). Slika računa se obrađuje u pregledaču i ne šalje se nigde.
 
+[Politika privatnosti](https://gembirdt-bit.github.io/atmosdom/privatnost.html) · [Uslovi korišćenja](https://gembirdt-bit.github.io/atmosdom/uslovi.html)
+
 ## Tehnologije
 
 HTML, CSS i JavaScript bez okvira, Service Worker, Web App Manifest, Web Share API, Notifications API, Google Drive API (Google Identity Services), Tesseract.js (OCR).

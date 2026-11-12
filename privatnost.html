@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Atmos Dom — Politika privatnosti</title>
+<link rel="icon" type="image/png" href="icon-192.png">
+<style>
+  body{margin:0;background:#f6f7f9;color:#1f2430;font:16px/1.6 system-ui,Segoe UI,Roboto,sans-serif}
+  main{max-width:760px;margin:0 auto;padding:28px 20px 48px}
+  header{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+  header img{width:48px;height:48px;border-radius:12px}
+  h1{font-size:1.6rem;margin:0}
+  h2{font-size:1.15rem;margin:28px 0 6px}
+  .muted{color:#6b7280;font-size:.92rem}
+  a{color:#0f9d78}
+  code{background:#eef0f3;padding:1px 5px;border-radius:4px}
+</style>
+</head>
+<body>
+<main>
+<header><img src="icon-192.png" alt=""><h1>Atmos Dom — Politika privatnosti</h1></header>
+<p class="muted">Važi od 13.11.2026.</p>
+
+<p><b>Atmos Dom</b> je aplikacija za praćenje troškova domaćinstva (računi, rokovi, podsetnici). Autor aplikacije je Gemb-Bit Željko Ilić. Ova stranica objašnjava koje podatke aplikacija koristi i gde se oni čuvaju.</p>
+
+<h2>Koje podatke aplikacija čuva</h2>
+<p>Podatke koje sam upišeš: račune, iznose, rokove, beleške, podsetnike, imena članova domaćinstva i podešavanja aplikacije. Aplikacija ne traži ime, broj telefona, lokaciju niti bilo koji drugi lični podatak.</p>
+
+<h2>Gde se podaci čuvaju</h2>
+<ul>
+  <li><b>Na tvom uređaju</b> — u memoriji pregledača (aplikacije) na telefonu ili računaru.</li>
+  <li><b>Na tvom Google Drive-u</b> — samo ako sam uključiš „Google Drive“ u Podešavanjima. Tada se podaci čuvaju u jednom fajlu „Atmos Dom — podaci.json“ na tvom Google Drive-u, da bi ih koristio na više svojih uređaja.</li>
+</ul>
+<p>Autor aplikacije <b>nema server</b> i nema pristup tvojim podacima. Podaci se ne šalju autoru niti bilo kome trećem, ne prodaju se i ne koriste za reklame ili praćenje.</p>
+
+<h2>Google Drive i Google podaci</h2>
+<p>Kad povežeš Google Drive, aplikacija od Google-a traži samo dozvolu <code>drive.file</code>: pristup isključivo fajlovima koje je sama napravila. Aplikacija <b>ne vidi, ne čita i ne menja</b> ostale fajlove na tvom Google Drive-u, niti tvoje mejlove, kontakte ili druge Google podatke. Iz Google naloga čita se još samo adresa e-pošte, da bi u Podešavanjima pisalo koji je nalog povezan.</p>
+<p>Prijava i dozvola idu direktno između tvog uređaja i Google-a. Pristupni ključ (token) se čuva samo privremeno na tvom uređaju i nikome se ne šalje. Korišćenje podataka dobijenih od Google API-ja je u skladu sa <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Google API Services User Data Policy</a>, uključujući zahteve „Limited Use“.</p>
+<p>Vezu možeš da prekineš u svakom trenutku: u aplikaciji (Podešavanja → Google Drive → Prekini vezu) ili u Google nalogu na <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener">myaccount.google.com/permissions</a>. Fajl „Atmos Dom — podaci.json“ možeš da obrišeš sa svog Drive-a kao i svaki drugi fajl.</p>
+
+<h2>Skeniranje računa (OCR)</h2>
+<p>Slika računa obrađuje se na tvom uređaju i ne šalje se nigde. Prvi put se sa interneta preuzima jezički paket za prepoznavanje teksta (Tesseract.js).</p>
+
+<h2>Brisanje podataka</h2>
+<p>Sve podatke na uređaju brišeš u aplikaciji (Podešavanja → Rezervna kopija → Napredno → Obriši sve podatke) ili brisanjem podataka pregledača. Podatke na Google Drive-u brišeš brisanjem fajla „Atmos Dom — podaci.json“.</p>
+
+<h2>Deca</h2>
+<p>Aplikacija nije namenjena deci mlađoj od 13 godina i ne prikuplja svesno njihove podatke.</p>
+
+<h2>Izmene</h2>
+<p>Ako se ova pravila promene, nova verzija biće objavljena na ovoj stranici sa novim datumom.</p>
+
+<h2>Kontakt</h2>
+<p>Pitanja u vezi sa privatnošću: <a href="mailto:vasserviserbgd@gmail.com">vasserviserbgd@gmail.com</a></p>
+
+<p class="muted" style="margin-top:32px"><a href="./">← Atmos Dom</a> · <a href="uslovi.html">Uslovi korišćenja</a></p>
+</main>
+</body>
+</html>
