@@ -190,7 +190,7 @@ const userOK=x=>db.filter==='all'||x.user===db.filter;
 const bAmt=b=>toBase(num(b.amount),b.cur);
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2600)}
 function download(name,text,mime){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:mime}));a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-const APP_VERSION='1.3',PRE='atmosDom1_preupdate';
+const APP_VERSION='1.3.1',PRE='atmosDom1_preupdate';
 const countAll=d=>d.users.length+d.bills.length+d.dates.length+d.notes.length+d.reminders.length;
 async function fetchRemoteVersion(){
   const r=await fetch(location.href.split('#')[0].split('?')[0],{cache:'no-store'});
@@ -560,7 +560,7 @@ $('impFile').onchange=e=>{
    aplikacija vidi samo fajlove koje je sama napravila). Svi uređaji prijavljeni istim Google nalogom dele podatke.
    Šalju se izmene par sekundi posle čuvanja i na svakih 5 minuta, dok važi Google dozvola (oko 1 sat);
    posle toga jedan dodir na „Sinhronizuj“ obnavlja dozvolu. Ako isti zapis menjaju dva uređaja, važi kasnija izmena. */
-const GD_CLIENT='';   /* OAuth Client ID iz Google Cloud konzole (…apps.googleusercontent.com). Prazno = isključeno. */
+const GD_CLIENT='867108184410-ctavf0871su36rju6n465rd0149ps2mu.apps.googleusercontent.com';   /* OAuth Client ID iz Google Cloud konzole (…apps.googleusercontent.com). Prazno = isključeno. */
 const GD_SCOPE='https://www.googleapis.com/auth/drive.file',GD_NAME='Atmos Dom — podaci.json',GD_KEY='atmosDom1_gdrive';
 const GD_COLLS=['users','bills','dates','notes','reminders'];
 const GD_LOCAL=['theme','accent','fs','notif','lastNotif','backupDays','lastExport','snapKeep'];
