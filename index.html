@@ -672,14 +672,16 @@ function gdCard(){
   if(!GD_CLIENT)return'';
   if(!gd.on)return`<div class="card"><h3>☁️ Google Drive</h3>
     <div class="small muted" style="margin-bottom:10px">Čuvaj podatke na svom Google Drive-u i koristi ih na više uređaja (telefon, tablet, računar). Aplikacija vidi samo svoj fajl „${esc(GD_NAME)}“, ništa drugo sa tvog Drive-a.</div>
-    <button class="btn-p" data-act="gdconnect" style="width:100%">☁️ Poveži Google Drive</button></div>`;
+    <button class="btn-p" data-act="gdconnect" style="width:100%">☁️ Poveži Google Drive</button>
+    <div class="small muted" style="margin-top:8px"><a href="privatnost.html" target="_blank" rel="noopener" style="color:inherit">Politika privatnosti</a> · <a href="uslovi.html" target="_blank" rel="noopener" style="color:inherit">Uslovi korišćenja</a></div></div>`;
   const t=gd.last?new Date(gd.last).toLocaleString('sr-RS',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'nikad';
   const st=gdBusy?'Sinhronizacija…':gd.err||(gdValid()?'✔ Radi':'Čeka potvrdu (dodirni Sinhronizuj)');
   return`<div class="card"><h3>☁️ Google Drive</h3>
     <div class="small muted" style="margin-bottom:8px">Povezan${gd.email?' nalog <b>'+esc(gd.email)+'</b>':''}. Svi uređaji sa istim Google nalogom dele podatke. Izmene se šalju par sekundi posle čuvanja i na svakih 5 minuta.</div>
     <div class="row sp" style="padding:6px 0;border-bottom:1px solid var(--line);gap:12px;align-items:flex-start"><span class="muted" style="flex:none">Stanje</span><b style="text-align:right;${gd.err?'color:var(--warn)':''}">${esc(st)}</b></div>
     <div class="row sp" style="padding:6px 0;border-bottom:1px solid var(--line);margin-bottom:10px"><span class="muted">Poslednja sinhronizacija</span><b>${esc(t)}</b></div>
-    <div class="row wrap" style="gap:8px"><button class="btn-p grow" data-act="gdsync" ${gdBusy?'disabled':''}>🔄 Sinhronizuj sada</button><button class="grow" data-act="gdoff">Prekini vezu</button></div></div>`;
+    <div class="row wrap" style="gap:8px"><button class="btn-p grow" data-act="gdsync" ${gdBusy?'disabled':''}>🔄 Sinhronizuj sada</button><button class="grow" data-act="gdoff">Prekini vezu</button></div>
+    <div class="small muted" style="margin-top:8px"><a href="privatnost.html" target="_blank" rel="noopener" style="color:inherit">Politika privatnosti</a> · <a href="uslovi.html" target="_blank" rel="noopener" style="color:inherit">Uslovi korišćenja</a></div></div>`;
 }
 /* traka na Pregledu kad je Drive povezan, a Google dozvola je istekla */
 function gdStrip(){
