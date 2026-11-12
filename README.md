@@ -1,78 +1,79 @@
 # Atmos Dom
 
-**Atmos Dom** je web aplikacija (PWA) za praćenje troškova domaćinstva: računi za struju, kiriju, internet, telefone, pretplate, poreze, kao i rokovi dokumenata, garancije, članarine i važni datumi. Radi u pregledaču, može da se instalira na telefon ili računar i funkcioniše i bez interneta.
+**Atmos Dom** je aplikacija za praćenje troškova domaćinstva: računi za struju, vodu, kiriju, internet, telefone, pretplate i poreze, kao i rokovi dokumenata, garancije, članarine i važni datumi. Radi na telefonu, tabletu i računaru, i bez interneta.
 
-Podaci se čuvaju na uređaju — nema naloga, servera ni praćenja. Po želji se sinhronizuju preko **tvog Google Drive-a** između više uređaja.
+Podaci se čuvaju na tvom uređaju, a po želji i na **tvom Google Drive-u**, pa svi tvoji uređaji dele iste podatke.
+
+**Otvori aplikaciju:** https://gembirdt-bit.github.io/atmosdom/
 
 ## Mogućnosti
 
 - **Računi** — struja, voda i komunalije, grejanje, gas, kirija / rata, internet / TV, telefon, pretplate, porezi, osiguranje, članarine, zdravlje i ostalo
-  - iznos, datum računa, rok plaćanja, status plaćeno / neplaćeno
-  - ponavljajući računi (mesečno, na 2 / 3 / 6 meseci, godišnje) — nakon plaćanja se sam pravi sledeći
-- **Rokovi** — isteci dokumenata, garancije (datum isteka se računa iz datuma kupovine i broja meseci), članarine, važni datumi, podsetnici
-- **Članovi domaćinstva** — svaki račun i rok pripada jednom članu; filter „Svi članovi“ ili pojedinačno
-- **Pregledi i izveštaji** — mesec, 3 meseca, 6 meseci i godina, sa listanjem prethodnih perioda; grafikon po mesecima, raspodela po kategorijama, poređenje sa prethodnim periodom, troškovi po članovima
-- **OCR skeniranje računa** 📷 — prepoznaje iznos, datume, rok plaćanja, izdavaoca i kategoriju (ćirilica i latinica); rezultat se uvek proverava u formi pre čuvanja
-- **Deljenje** — spisak neplaćenih računa, pojedinačni račun ili izveštaj preko menija za deljenje; kopija podataka kao fajl
-- **Google Drive sinhronizacija** ☁️ — svi tvoji uređaji (telefon, tablet, računar) dele iste podatke preko fajla „Atmos Dom — podaci.json“ na tvom Google Drive-u; aplikacija vidi samo taj svoj fajl
-- **Rezervna kopija** — dugmad **Napravi rezervnu kopiju** i **Vrati rezervnu kopiju** (iz fajla ili iz automatskih dnevnih kopija); CSV za Excel i štampa
-- **Podsetnici i obaveštenja** — upozorenja pre isteka roka, broj stavki na ikonici aplikacije (gde je podržano)
-- **Teme** — tamna, svetla ili automatska, izbor boje akcenta i veličine teksta
-- **Interne rezervne kopije** — automatski jednom dnevno, uz mogućnost vraćanja
+  - iznos (i u stranoj valuti), datum računa, rok plaćanja, plaćeno / neplaćeno
+  - ponavljajući računi (mesečno, na 2 / 3 / 6 meseci, godišnje) — posle plaćanja se sam pravi sledeći
+- **Rokovi** — isteci dokumenata, garancije (rok se računa iz datuma kupovine), članarine, pretplate i važni datumi
+- **Članovi domaćinstva** — svaki račun i rok pripada jednom članu; pregled svih ili jednog člana i podela troškova
+- **Pregled** — šta zahteva pažnju, sledeći rokovi, troškovi po mesecima i kategorijama
+- **Izveštaji** — mesec, 3 i 6 meseci, godina; grafikon po mesecima, kategorije, poređenje sa prethodnim periodom, najveći troškovi, troškovi po članovima, budžet
+- **Skeniranje računa kamerom** 📷 — prepoznaje iznos, datume, rok plaćanja, izdavaoca i kategoriju (ćirilica i latinica); rezultat se uvek proverava pre čuvanja
+- **Beleške i podsetnici** — sa upozorenjem pre roka; obaveštenja i broj na ikonici aplikacije (gde je podržano)
+- **Alati** — kalkulator, PDV kalkulator, kursna lista i konverter valuta
+- **Deljenje** — spisak neplaćenih računa, pojedinačni račun ili izveštaj preko Vibera, WhatsApp-a, e-pošte…
+- **Google Drive sinhronizacija** ☁️ — isti podaci na svim tvojim uređajima
+- **Rezervna kopija** — jednim dugmetom napravi ili vrati kopiju; automatske dnevne kopije na uređaju; izvoz za Excel (CSV) i štampa
+- **Izgled** — tamna, svetla ili automatska tema, boja akcenta, veličina teksta
 
-## Instalacija i pokretanje
+## Instalacija
 
-Aplikacija je statična — nema build koraka ni zavisnosti.
+Aplikacija se instalira direktno iz pregledača, bez prodavnice aplikacija.
 
-1. Postavi fajlove u isti folder na bilo koji hosting sa **https** (npr. GitHub Pages, Netlify, Cloudflare Pages):
-   - `index.html`
-   - `manifest.json`
-   - `sw.js`
-   - `icon-192.png`
-   - `icon-512.png`
-2. Otvori adresu u Chrome-u ili Edge-u.
-3. Izaberi **Instaliraj aplikaciju** (računar) ili **Dodaj na početni ekran** (telefon).
+### Android
+1. Otvori https://gembirdt-bit.github.io/atmosdom/ u **Chrome-u**.
+2. U meniju (⋮) izaberi **Instaliraj aplikaciju** ili **Dodaj na početni ekran**.
 
-### GitHub Pages
+### Windows
+1. Otvori adresu u **Chrome-u** ili **Edge-u**.
+2. Klikni ikonu za instalaciju u adresnoj traci (ili meni → **Instaliraj Atmos Dom**).
 
-1. Okači fajlove u repozitorijum.
-2. `Settings → Pages → Deploy from a branch → main / (root)`.
-3. Aplikacija je dostupna na `https://<korisnik>.github.io/<repozitorijum>/`.
+### iPhone / iPad
+1. Otvori adresu u **Safari-ju**.
+2. Dodirni **Podeli** → **Dodaj na početni ekran**.
 
-### Lokalno testiranje
+## Google Drive sinhronizacija
 
-```bash
-python3 -m http.server 8080
-```
+1. U aplikaciji otvori **Podešavanja → ☁️ Google Drive → Poveži Google Drive**.
+2. Prijavi se svojim Google nalogom i odobri pristup.
+3. Na drugom uređaju uradi isto sa **istim** Google nalogom — podaci se spajaju i od tada su isti na oba uređaja.
 
-Zatim otvori `http://localhost:8080`. Service worker i instalacija rade na `localhost`, ali ne preko `file://`.
+Podaci se čuvaju u fajlu „Atmos Dom — podaci.json“ na tvom Google Drive-u. Aplikacija vidi samo taj svoj fajl — ne vidi ostale fajlove, mejlove ni kontakte. Izmene se šalju par sekundi posle čuvanja i na svakih 5 minuta; posle duže pauze dovoljan je jedan dodir na **Sinhronizuj**.
 
-## Privatnost i podaci
+## Rezervna kopija
 
-- Podaci se čuvaju u `localStorage` pregledača na tvom uređaju.
-- Članovi domaćinstva su profili unutar aplikacije, a ne nalozi na serveru.
-- Za deljenje podataka između uređaja uključi **Google Drive** u Podešavanjima (ili napravi rezervnu kopiju i vrati je na drugom uređaju).
-- Google Drive: aplikacija traži samo dozvolu za fajlove koje sama napravi (`drive.file`) — ne vidi ostale fajlove na tvom Drive-u. Podaci idu direktno sa uređaja na tvoj Drive, bez posrednika.
-- Redovno pravi rezervnu kopiju (izvoz). Brisanje podataka pregledača briše i podatke aplikacije.
-- OCR koristi [Tesseract.js](https://github.com/naptha/tesseract.js) učitan sa CDN-a; prvi put je potreban internet (jezički paket ~10 MB, zatim se pamti). Slika računa se obrađuje u pregledaču i ne šalje se nigde.
+U **Podešavanja → Rezervna kopija**:
+- **Napravi rezervnu kopiju** — preuzima fajl sa svim podacima; sačuvaj ga van telefona (Drive, e-pošta, računar).
+- **Vrati rezervnu kopiju** — iz tog fajla ili iz automatske dnevne kopije na uređaju.
 
-[Politika privatnosti](https://gembirdt-bit.github.io/atmosdom/privatnost.html) · [Uslovi korišćenja](https://gembirdt-bit.github.io/atmosdom/uslovi.html)
+## Verzije
 
-## Tehnologije
+### 1.3
+- **Google Drive sinhronizacija** između uređaja
+- Jednostavnija rezervna kopija: **Napravi** i **Vrati**; CSV i štampa su pod „Napredno“
 
-HTML, CSS i JavaScript bez okvira, Service Worker, Web App Manifest, Web Share API, Notifications API, Google Drive API (Google Identity Services), Tesseract.js (OCR).
+### 1.2
+- Računi, rokovi, članovi domaćinstva, izveštaji, skeniranje računa, kursna lista i alati
+
+## Privatnost
+
+Nema naloga, servera ni praćenja. [Politika privatnosti](https://gembirdt-bit.github.io/atmosdom/privatnost.html) · [Uslovi korišćenja](https://gembirdt-bit.github.io/atmosdom/uslovi.html)
+
+## Tehnička podrška
+
+E-pošta: **vasserviserbgd@gmail.com**
 
 ## Autor
 
-**Gemb-Bit Željko Ilić**
+**Gemb-Bit Željko Ilić** · [Sve Atmos aplikacije](https://gembirdt-bit.github.io/)
 
-Ako Vam se dopadaju moje aplikacije i želite da uplatite neki simboličan iznos za kafu ili ručak :D 
-Možete donirati na račun: 115000000006810143 Željko Ilić, Beograd. 
-Hvala!
+Aplikaciju možeš slobodno da koristiš. Ako praviš svoju verziju (clone), ostavi link ka autoru.
 
-## Licenca
-
-Aplikaciju moižete slobodno koristiti uz uslov da ostavite credits link ka autoru - ako radite clone.
-
-Ako Vam se dopadaju moje aplikacije i želite da platite kafu ili ručak :D Možete donirati na račun: 115000000006810143 Željko Ilić, Beograd. 
-Hvala!
+Ako ti se aplikacija dopada i želiš da častiš autora kafom ili ručkom :) — račun **115000000006810143**, Željko Ilić, Beograd. Hvala!
