@@ -170,7 +170,7 @@ function norm(d){const f=fresh(),sv=d.settings||{};d.settings=Object.assign(f.se
 function load(){try{const r=JSON.parse(localStorage.getItem(KEY));if(r&&r.users)return norm(r)}catch{}return fresh()}
 let db=load();
 const S=()=>db.settings;
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(db))}catch{toast('Greška pri čuvanju (memorija puna?)')}syncAlerts()};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(db))}catch{toast('Greška pri čuvanju (memorija puna?)')}syncAlerts();if(typeof gdSoon==='function')gdSoon()};
 const getSnaps=()=>{try{return JSON.parse(localStorage.getItem(SNAP))||[]}catch{return[]}};
 const hasData=()=>db.bills.length||db.dates.length||db.notes.length||db.reminders.length;
 function takeSnap(reason,force){try{if(!hasData())return;const a=getSnaps(),day=todayStr();if(!force&&a.length&&a[0].day===day)return;
@@ -190,7 +190,7 @@ const userOK=x=>db.filter==='all'||x.user===db.filter;
 const bAmt=b=>toBase(num(b.amount),b.cur);
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2600)}
 function download(name,text,mime){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:mime}));a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-const APP_VERSION='1.2',PRE='atmosDom1_preupdate';
+const APP_VERSION='1.3',PRE='atmosDom1_preupdate';
 const countAll=d=>d.users.length+d.bills.length+d.dates.length+d.notes.length+d.reminders.length;
 async function fetchRemoteVersion(){
   const r=await fetch(location.href.split('#')[0].split('?')[0],{cache:'no-store'});
@@ -345,7 +345,7 @@ function pgPregled(){
   <div class="card"><h3>📊 Troškovi po mesecima</h3>${monthChart(r)}</div>
   <div class="card"><h3>🗂️ Po kategorijama</h3>${catRows(list)}</div>
   <div class="card"><h3>⏭️ Sledeći rokovi</h3>${up.length?up.map(a=>`<div class="row sp clk" data-act="edit" data-t="${a.t}" data-id="${a.id}" style="padding:8px 0;border-bottom:1px solid var(--line)"><div class="row grow"><span style="font-size:1.3rem">${a.ic}</span><div class="grow"><div style="font-weight:600">${esc(a.t)}</div><div class="small muted">${fmtDate(a.d)} · ${uChip(a.u)}</div></div></div><b class="small">${esc(a.a)}</b></div>`).join(''):'<div class="empty">Nema nadolazećih rokova.</div>'}</div>
-  ${backupDue()?`<div class="card noprint" style="border-color:var(--warn)"><h3>💾 Vreme je za rezervnu kopiju</h3><div class="row wrap"><button class="btn-p grow" data-act="sharefile">☁️ Podeli / sačuvaj</button><button class="grow" data-act="export">⬇ Preuzmi</button><button class="grow" data-act="snooze">Kasnije</button></div></div>`:''}`;
+  ${gdStrip()}${backupDue()?`<div class="card noprint" style="border-color:var(--warn)"><h3>💾 Vreme je za rezervnu kopiju</h3><div class="row wrap"><button class="btn-p grow" data-act="export">💾 Napravi rezervnu kopiju</button>${GD_CLIENT&&!gd.on?'<button class="grow" data-act="gdconnect">☁️ Uključi Google Drive</button>':''}<button class="grow" data-act="snooze">Kasnije</button></div></div>`:''}`;
 }
 function billItem(b){
   const s=billStat2(b),cls={bad:'b-bad',warn:'b-warn',ok:'b-ok',n:'b-n'}[s.lvl];
@@ -424,20 +424,20 @@ function pgPodesavanja(){
     <div class="small muted" style="margin-bottom:10px">Instalirana verzija: <b>${APP_VERSION}</b>${ui.upd?` · dostupna: <b>${esc(ui.upd)}</b>`:''}. Pri ažuriranju se automatski čuva interna kopija i na uređaj se preuzima izvoz (JSON), pa se učitava nova verzija, a podaci se proveravaju i po potrebi vraćaju.</div>
     <div class="row"><button class="grow" data-act="checkupd">🔍 Proveri ažuriranje</button>${ui.upd?`<button class="btn-p grow" data-act="doupd">⬆ Ažuriraj na ${esc(ui.upd)}</button>`:''}</div>
   </div>
-  <div class="card"><h3>🛡️ Podaci i rezervne kopije</h3>
-    <div class="grid g2" style="margin-bottom:10px"><div><label class="l">Podsetnik za izvoz</label><select class="fld" data-cfg="backupDays" data-n="1">${[[0,'Isključen'],[7,'Nedeljno'],[14,'Na 2 nedelje'],[30,'Mesečno']].map(([k,l])=>`<option value="${k}" ${num(s.backupDays)===k?'selected':''}>${l}</option>`).join('')}</select></div>
-    <div><label class="l">Interne kopije</label><select class="fld" data-cfg="snapKeep" data-n="1">${[3,5,7,10,20].map(k=>`<option value="${k}" ${num(s.snapKeep)===k?'selected':''}>${k}</option>`).join('')}</select></div></div>
-    <button class="btn-p" style="width:100%;margin-bottom:8px" data-act="sharefile">☁️ Podeli kopiju (Drive, e-pošta, Viber…)</button>
-    <div class="grid g2" style="margin-bottom:8px"><button data-act="export">⬇ Izvezi (JSON)</button><button data-act="import">⬆ Uvezi</button><button data-act="csv">📑 Izvezi CSV</button><button onclick="window.print()">🖨️ Štampaj</button></div>
-    <div class="small muted" style="margin-bottom:10px">Poslednji izvoz: ${s.lastExport?fmtDate(s.lastExport):'nikad'}. Uvoz može da spoji podatke sa postojećim (korisno za deljenje između članova).</div>
-    ${sn.length?`<label class="l">Interne kopije</label>${sn.map((x,i)=>`<div class="row sp small" style="padding:6px 0;border-bottom:1px solid var(--line)"><span>${new Date(x.t).toLocaleString('sr-RS',{dateStyle:'short',timeStyle:'short'})} <span class="muted">· ${esc(x.reason)}</span></span><button class="btn-s" data-act="restore" data-i="${i}">Vrati</button></div>`).join('')}<div style="height:10px"></div>`:''}
-    <button class="btn-d" data-act="reset" style="width:100%">⚠️ Obriši sve podatke</button></div>
+  ${gdCard()}
+  <div class="card"><h3>🛡️ Rezervna kopija</h3>
+    <div class="small muted" style="margin-bottom:10px">Aplikacija jednom dnevno sama pravi kopiju na uređaju. Rezervnu kopiju napravi povremeno i sačuvaj je van telefona${GD_CLIENT?', ili uključi Google Drive iznad':''}.</div>
+    <div class="grid g2" style="margin-bottom:6px"><button class="btn-p" data-act="export">💾 Napravi rezervnu kopiju</button><button data-act="restoredlg">↩ Vrati rezervnu kopiju</button></div>
+    <div class="small muted" style="margin-bottom:10px">Poslednja rezervna kopija: ${s.lastExport?fmtDate(s.lastExport):'nikad'}</div>
+    <details style="border-top:1px solid var(--line);padding-top:8px"><summary class="small muted" style="cursor:pointer">Napredno</summary>
+     <div class="grid g2" style="margin:10px 0 8px"><button class="btn-s" data-act="csv">📑 Izvoz za Excel (CSV)</button><button class="btn-s" onclick="window.print()">🖨️ Štampaj</button></div>
+     <button class="btn-d" data-act="reset" style="width:100%">⚠️ Obriši sve podatke</button></details></div>
   <div class="card"><h3>☕ Podrži autora</h3>
     <div class="small muted" style="margin-bottom:10px">Ako ti se aplikacija sviđa, možeš da častiš autora kafom.</div>
     <button class="btn-p" style="width:100%" onclick="coffeeOpen()" type="button">☕ Plati mi kafu</button>
   </div>`;
 }
-function backupDue(){const n=num(S().backupDays);if(!n||!hasData())return false;const e=S().lastExport;return!e||-dayDiff(e)>=n}
+function backupDue(){const n=num(S().backupDays);if(!n||!hasData())return false;if(gd.on&&gd.last&&Date.now()-gd.last<7*864e5)return false;const e=S().lastExport;return!e||-dayDiff(e)>=n}
 
 /* ---------- FORME ---------- */
 const userOpts=()=>db.users.map(u=>[u.id,u.name]);
@@ -554,6 +554,142 @@ $('impFile').onchange=e=>{
   r.readAsText(f);
 };
 
+
+/* ---------- GOOGLE DRIVE SINHRONIZACIJA ----------
+   Podaci se čuvaju u fajlu „Atmos Dom — podaci.json“ na Google Drive-u korisnika (dozvola drive.file:
+   aplikacija vidi samo fajlove koje je sama napravila). Svi uređaji prijavljeni istim Google nalogom dele podatke.
+   Šalju se izmene par sekundi posle čuvanja i na svakih 5 minuta, dok važi Google dozvola (oko 1 sat);
+   posle toga jedan dodir na „Sinhronizuj“ obnavlja dozvolu. Ako isti zapis menjaju dva uređaja, važi kasnija izmena. */
+const GD_CLIENT='';   /* OAuth Client ID iz Google Cloud konzole (…apps.googleusercontent.com). Prazno = isključeno. */
+const GD_SCOPE='https://www.googleapis.com/auth/drive.file',GD_NAME='Atmos Dom — podaci.json',GD_KEY='atmosDom1_gdrive';
+const GD_COLLS=['users','bills','dates','notes','reminders'];
+const GD_LOCAL=['theme','accent','fs','notif','lastNotif','backupDays','lastExport','snapKeep'];
+let gd=(()=>{try{const x=JSON.parse(localStorage.getItem(GD_KEY));if(x&&x.h)return x}catch{}return{on:false,fileId:'',h:{},last:0,err:'',email:''}})();
+let gdTok=(()=>{try{const t=JSON.parse(sessionStorage.getItem(GD_KEY+'_t'));if(t&&t.exp>Date.now()+60000)return t}catch{}return null})();
+let gdClient=null,gdBusy=false,gdT=null,gdWait=null;
+const gdStore=()=>{try{localStorage.setItem(GD_KEY,JSON.stringify(gd))}catch{}};
+const gdValid=()=>!!(gdTok&&gdTok.exp>Date.now()+60000);
+function gdHash(o){const t=JSON.stringify(o);let h=2166136261;for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619)}return(h>>>0).toString(36)+t.length.toString(36)}
+function gdShared(){const o={};Object.keys(S()).forEach(k=>{if(!GD_LOCAL.includes(k))o[k]=S()[k]});return o}
+function gdLocal(){const m={};GD_COLLS.forEach(c=>(db[c]||[]).forEach(r=>{if(r&&r.id)m[c+'/'+r.id]=r}));m._set=gdShared();return m}
+function gdLoadLib(){return new Promise((res,rej)=>{if(window.google&&google.accounts&&google.accounts.oauth2)return res();
+  const sc=document.createElement('script');sc.src='https://accounts.google.com/gsi/client';sc.async=true;sc.onload=()=>res();sc.onerror=()=>rej(new Error('Google biblioteka nije učitana (internet?)'));document.head.appendChild(sc)})}
+/* traži Google dozvolu — mora iz dodira korisnika (inače pregledač blokira prozor) */
+async function gdAuth(consent){
+  await gdLoadLib();
+  return new Promise((res,rej)=>{
+    if(!gdClient)gdClient=google.accounts.oauth2.initTokenClient({client_id:GD_CLIENT,scope:GD_SCOPE,callback:()=>{},error_callback:()=>{}});
+    gdClient.callback=r=>{if(r&&r.access_token){gdTok={t:r.access_token,exp:Date.now()+(Number(r.expires_in)||3600)*1000};try{sessionStorage.setItem(GD_KEY+'_t',JSON.stringify(gdTok))}catch{}res()}else rej(new Error((r&&r.error)||'Dozvola nije data'))};
+    gdClient.error_callback=e=>rej(new Error(e&&e.type==='popup_closed'?'Prozor za prijavu je zatvoren':'Prijava na Google nije uspela'));
+    gdClient.requestAccessToken({prompt:consent?'consent':'',hint:gd.email||undefined});
+  });
+}
+async function gdApi(url,opt){
+  const r=await fetch(url,Object.assign({},opt,{headers:Object.assign({Authorization:'Bearer '+gdTok.t},(opt&&opt.headers)||{})}));
+  if(r.status===401){gdTok=null;try{sessionStorage.removeItem(GD_KEY+'_t')}catch{}throw new Error('auth')}
+  if(!r.ok)throw new Error('Drive greška '+r.status);
+  return r;
+}
+async function gdFindFile(){
+  if(gd.fileId){try{await gdApi('https://www.googleapis.com/drive/v3/files/'+gd.fileId+'?fields=id,trashed');return gd.fileId}catch(e){if(e.message==='auth')throw e;gd.fileId=''}}
+  const q=encodeURIComponent("name='"+GD_NAME.replace(/'/g,"\\'")+"' and trashed=false");
+  const j=await (await gdApi('https://www.googleapis.com/drive/v3/files?spaces=drive&orderBy=modifiedTime desc&fields=files(id)&q='+q)).json();
+  gd.fileId=(j.files&&j.files[0]&&j.files[0].id)||'';return gd.fileId;
+}
+async function gdUpload(body){
+  const txt=JSON.stringify(body);
+  if(gd.fileId){await gdApi('https://www.googleapis.com/upload/drive/v3/files/'+gd.fileId+'?uploadType=media',{method:'PATCH',headers:{'Content-Type':'application/json'},body:txt});return}
+  const b='atmosdom'+Date.now(),meta={name:GD_NAME,mimeType:'application/json',description:'Podaci aplikacije Atmos Dom. Ne menjaj ručno.'};
+  const r=await gdApi('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id',{method:'POST',headers:{'Content-Type':'multipart/related; boundary='+b},
+    body:'--'+b+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n'+JSON.stringify(meta)+'\r\n--'+b+'\r\nContent-Type: application/json\r\n\r\n'+txt+'\r\n--'+b+'--'});
+  gd.fileId=(await r.json()).id;
+}
+function gdSoon(ms){if(!gd.on||!GD_CLIENT)return;clearTimeout(gdT);gdT=setTimeout(()=>{if(gdValid())gdSync()},ms==null?5000:ms)}
+async function gdSync(manual){
+  if(!GD_CLIENT||!gd.on||gdBusy)return;
+  if(!navigator.onLine){gd.err='Nema interneta — izmene čekaju';gdStore();if(manual)toast(gd.err);return}
+  if(document.querySelector('dialog[open]')&&!manual){gdSoon(20000);return}
+  gdBusy=true;if(manual)render();let redraw=!!manual;
+  try{
+    if(!gdValid()){if(!manual){gd.err='Potrebna je potvrda — dodirni „Sinhronizuj“';gdStore();return}await gdAuth(false)}
+    let remote={recs:{}};
+    if(await gdFindFile()){try{remote=await (await gdApi('https://www.googleapis.com/drive/v3/files/'+gd.fileId+'?alt=media')).json()}catch(e){if(e.message==='auth')throw e;remote={recs:{}}}}
+    const R=remote.recs||{},loc=gdLocal(),now=Date.now(),out=Object.assign({},R);let got=0,sent=0;
+    /* moje izmene od poslednje sinhronizacije */
+    const mine={};Object.keys(loc).forEach(k=>{const h=gdHash(loc[k]);if(gd.h[k]!==h)mine[k]=loc[k]});
+    Object.keys(gd.h).forEach(k=>{if(!(k in loc))mine[k]=null});
+    /* tuđe izmene: zapis na Drive-u se razlikuje od onoga što smo poslednji put videli */
+    Object.keys(R).forEach(k=>{
+      const rv=R[k]&&R[k].d!==undefined?R[k].d:null,rh=rv?gdHash(rv):null;
+      if(k in mine)return;                                  /* lokalna izmena je novija → ostaje */
+      if(rh===(gd.h[k]||null))return;                       /* ništa novo */
+      if(k==='_set'){if(rv){const keep={};GD_LOCAL.forEach(x=>{if(x in S())keep[x]=S()[x]});db.settings=norm(Object.assign({},db,{settings:Object.assign({},rv,keep)})).settings;got++}gd.h[k]=gdHash(gdShared());return}
+      const [c,id]=k.split('/');if(!GD_COLLS.includes(c))return;
+      const i=db[c].findIndex(x=>x.id===id);
+      if(rv){if(i>=0)db[c][i]=rv;else db[c].push(rv);gd.h[k]=rh}else{if(i>=0)db[c].splice(i,1);delete gd.h[k]}
+      got++;
+    });
+    Object.keys(mine).forEach(k=>{out[k]={t:now,d:mine[k]};sent++;if(mine[k])gd.h[k]=gdHash(mine[k]);else delete gd.h[k]});
+    if(sent||!gd.fileId)await gdUpload({app:'Atmos Dom',v:1,t:new Date().toISOString(),recs:out});
+    if(!db.users.length)db.users=fresh().users;
+    if(got){try{localStorage.setItem(KEY,JSON.stringify(db))}catch{}syncAlerts()}
+    gd.last=Date.now();gd.err='';gdStore();
+    if(manual)toast(got?'Sinhronizovano ✔ — stiglo izmena: '+got:'Sinhronizovano ✔');
+    if(got||ui.tab==='podesavanja')redraw=true;
+  }catch(e){
+    gd.err=e.message==='auth'?'Potrebna je potvrda — dodirni „Sinhronizuj“':String(e.message||'Greška');gdStore();if(manual)toast('⚠ '+gd.err);
+  }finally{gdBusy=false;if(redraw||ui.tab==='podesavanja')gdRender()}
+}
+/* ne iscrtavaj ekran dok korisnik kuca ili je otvoren prozor */
+function gdRender(){const a=document.activeElement;if(document.querySelector('dialog[open]')||(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))){clearTimeout(gdWait);gdWait=setTimeout(gdRender,1500);return}render()}
+async function gdConnect(){
+  if(!GD_CLIENT){toast('Google Drive još nije podešen');return}
+  try{await gdAuth(true);
+    try{const u=await (await gdApi('https://www.googleapis.com/drive/v3/about?fields=user(emailAddress)')).json();gd.email=(u.user&&u.user.emailAddress)||''}catch{}
+    const empty=!hasData()&&db.users.length===1&&db.users[0].name==='Ja';
+    if(empty)db.users=[];                                   /* nov uređaj bez podataka: uzmi članove sa Drive-a */
+    gd.on=true;gd.h={};gd.fileId='';
+    if(empty)gd.h._set=gdHash(gdShared());                 /* podrazumevana podešavanja ne prepisuju ona sa Drive-a */
+    gdStore();toast('Google Drive povezan ✔');await gdSync(true);
+    if(!db.users.length){db.users=fresh().users;save()}
+    gdMergeUsers()}
+  catch(e){toast('⚠ '+(e.message||'Povezivanje nije uspelo'))}
+}
+/* članovi sa istim imenom (npr. „Ja“ sa dva uređaja) spajaju se u jednog */
+function gdMergeUsers(){
+  const seen={},map={};db.users.forEach(u=>{const k=String(u.name||'').trim().toLowerCase();if(seen[k])map[u.id]=seen[k];else seen[k]=u.id});
+  if(!Object.keys(map).length)return;
+  ['bills','dates','notes','reminders'].forEach(c=>(db[c]||[]).forEach(x=>{if(map[x.user])x.user=map[x.user]}));
+  db.users=db.users.filter(u=>!map[u.id]);if(map[db.filter])db.filter=map[db.filter];save();render();
+}
+function gdDisconnect(){
+  if(!confirm('Prekinuti sinhronizaciju sa Google Drive-om? Podaci ostaju i na uređaju i na Drive-u.'))return;
+  try{if(gdTok&&window.google&&google.accounts)google.accounts.oauth2.revoke(gdTok.t,()=>{})}catch{}
+  gdTok=null;try{sessionStorage.removeItem(GD_KEY+'_t')}catch{}
+  gd={on:false,fileId:'',h:{},last:0,err:'',email:''};gdStore();render();toast('Veza sa Google Drive-om je prekinuta');
+}
+function gdCard(){
+  if(!GD_CLIENT)return'';
+  if(!gd.on)return`<div class="card"><h3>☁️ Google Drive</h3>
+    <div class="small muted" style="margin-bottom:10px">Čuvaj podatke na svom Google Drive-u i koristi ih na više uređaja (telefon, tablet, računar). Aplikacija vidi samo svoj fajl „${esc(GD_NAME)}“, ništa drugo sa tvog Drive-a.</div>
+    <button class="btn-p" data-act="gdconnect" style="width:100%">☁️ Poveži Google Drive</button></div>`;
+  const t=gd.last?new Date(gd.last).toLocaleString('sr-RS',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'nikad';
+  const st=gdBusy?'Sinhronizacija…':gd.err||(gdValid()?'✔ Radi':'Čeka potvrdu (dodirni Sinhronizuj)');
+  return`<div class="card"><h3>☁️ Google Drive</h3>
+    <div class="small muted" style="margin-bottom:8px">Povezan${gd.email?' nalog <b>'+esc(gd.email)+'</b>':''}. Svi uređaji sa istim Google nalogom dele podatke. Izmene se šalju par sekundi posle čuvanja i na svakih 5 minuta.</div>
+    <div class="row sp" style="padding:6px 0;border-bottom:1px solid var(--line);gap:12px;align-items:flex-start"><span class="muted" style="flex:none">Stanje</span><b style="text-align:right;${gd.err?'color:var(--warn)':''}">${esc(st)}</b></div>
+    <div class="row sp" style="padding:6px 0;border-bottom:1px solid var(--line);margin-bottom:10px"><span class="muted">Poslednja sinhronizacija</span><b>${esc(t)}</b></div>
+    <div class="row wrap" style="gap:8px"><button class="btn-p grow" data-act="gdsync" ${gdBusy?'disabled':''}>🔄 Sinhronizuj sada</button><button class="grow" data-act="gdoff">Prekini vezu</button></div></div>`;
+}
+/* traka na Pregledu kad je Drive povezan, a Google dozvola je istekla */
+function gdStrip(){
+  if(!GD_CLIENT||!gd.on||gdValid())return'';
+  return`<div class="card noprint" style="padding:10px 14px"><div class="row sp" style="gap:10px"><span class="small">☁️ Google Drive čeka potvrdu${gd.last?' · poslednja sinhronizacija '+new Date(gd.last).toLocaleString('sr-RS',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):''}</span><button class="btn-s btn-p" data-act="gdsync">🔄 Sinhronizuj</button></div></div>`;
+}
+setInterval(()=>{if(gd.on&&gdValid())gdSync()},5*60*1000);
+addEventListener('online',()=>gdSoon(2000));
+if(gd.on&&gdValid())setTimeout(()=>gdSync(),2500);
+
 /* ---------- AKCIJE ---------- */
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-act],[data-tab],[data-set],[data-ui]');if(!b)return;const d=b.dataset;
@@ -575,11 +711,22 @@ document.addEventListener('click',e=>{
     case'sharefile':shareFile();break;
     case'checkupd':checkUpdate(false);break;
     case'doupd':if(confirm('Ažurirati aplikaciju? Podaci se prvo sačuvaju i preuzima se izvoz.'))doUpdate();break;
-    case'export':S().lastExport=todayStr();save();download(`atmos_dom_backup_${todayStr()}.json`,JSON.stringify(db,null,2),'application/json');toast('Kopija preuzeta');render();break;
+    case'export':S().lastExport=todayStr();save();download(`atmos-dom-rezervna-kopija-${todayStr()}.json`,JSON.stringify(db,null,2),'application/json');toast('Rezervna kopija preuzeta ✔');render();break;
     case'snooze':{const n=num(S().backupDays)||7;const x=new Date();x.setDate(x.getDate()-n+1);S().lastExport=ymd(x);save();render();break}
-    case'restore':restoreSnap(+d.i);break;
+    case'restore':if($('dlg').open)$('dlg').close();restoreSnap(+d.i);break;
+    case'restoredlg':{const sn=getSnaps();
+      $('dlgForm').innerHTML=`<h3>↩ Vrati rezervnu kopiju</h3>
+       <div class="small muted" style="margin-bottom:10px">Izaberi fajl rezervne kopije (.json) ili jednu od automatskih kopija sa ovog uređaja. Pre vraćanja se sačuva trenutno stanje.</div>
+       <button type="button" class="btn-p" data-act="import" style="width:100%;margin-bottom:12px">📂 Izaberi fajl rezervne kopije</button>
+       ${sn.length?`<label class="l">Automatske kopije na ovom uređaju</label>${sn.map((x,i)=>`<div class="row sp small" style="padding:6px 0;border-bottom:1px solid var(--line)"><span>${new Date(x.t).toLocaleString('sr-RS',{dateStyle:'short',timeStyle:'short'})}</span><button type="button" class="btn-s" data-act="restore" data-i="${i}">Vrati</button></div>`).join('')}`:'<div class="small muted">Još nema automatskih kopija.</div>'}
+       <div class="row" style="margin-top:14px"><button type="button" class="grow" data-act="dlgx">Zatvori</button></div>`;
+      if(!$('dlg').open)$('dlg').showModal();break}
+    case'dlgx':$('dlg').close();break;
+    case'gdconnect':gdConnect();break;
+    case'gdsync':gdSync(true);break;
+    case'gdoff':gdDisconnect();break;
     case'csv':exportCsv();break;
-    case'import':$('impFile').click();break;
+    case'import':if($('dlg').open)$('dlg').close();$('impFile').click();break;
     case'testnotif':testNotif();break;
     case'useradd':{const n=prompt('Ime člana domaćinstva:');if(n&&n.trim()){db.users.push({id:uid(),name:n.trim(),color:UCOL[db.users.length%UCOL.length]});save();render()}break}
     case'useredit':{const u=userById(d.id);const n=u&&prompt('Ime:',u.name);if(n&&n.trim()){u.name=n.trim();save();render()}break}

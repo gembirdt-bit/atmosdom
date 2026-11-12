@@ -2,7 +2,7 @@
 
 **Atmos Dom** je web aplikacija (PWA) za praćenje troškova domaćinstva: računi za struju, kiriju, internet, telefone, pretplate, poreze, kao i rokovi dokumenata, garancije, članarine i važni datumi. Radi u pregledaču, može da se instalira na telefon ili računar i funkcioniše i bez interneta.
 
-Svi podaci se čuvaju lokalno na uređaju — nema naloga, servera ni praćenja.
+Podaci se čuvaju na uređaju — nema naloga, servera ni praćenja. Po želji se sinhronizuju preko **tvog Google Drive-a** između više uređaja.
 
 ## Mogućnosti
 
@@ -14,7 +14,8 @@ Svi podaci se čuvaju lokalno na uređaju — nema naloga, servera ni praćenja.
 - **Pregledi i izveštaji** — mesec, 3 meseca, 6 meseci i godina, sa listanjem prethodnih perioda; grafikon po mesecima, raspodela po kategorijama, poređenje sa prethodnim periodom, troškovi po članovima
 - **OCR skeniranje računa** 📷 — prepoznaje iznos, datume, rok plaćanja, izdavaoca i kategoriju (ćirilica i latinica); rezultat se uvek proverava u formi pre čuvanja
 - **Deljenje** — spisak neplaćenih računa, pojedinačni račun ili izveštaj preko menija za deljenje; kopija podataka kao fajl
-- **Uvoz / izvoz** — JSON (rezervna kopija, uvoz sa spajanjem ili zamenom), CSV za Excel, štampa
+- **Google Drive sinhronizacija** ☁️ — svi tvoji uređaji (telefon, tablet, računar) dele iste podatke preko fajla „Atmos Dom — podaci.json“ na tvom Google Drive-u; aplikacija vidi samo taj svoj fajl
+- **Rezervna kopija** — dugmad **Napravi rezervnu kopiju** i **Vrati rezervnu kopiju** (iz fajla ili iz automatskih dnevnih kopija); CSV za Excel i štampa
 - **Podsetnici i obaveštenja** — upozorenja pre isteka roka, broj stavki na ikonici aplikacije (gde je podržano)
 - **Teme** — tamna, svetla ili automatska, izbor boje akcenta i veličine teksta
 - **Interne rezervne kopije** — automatski jednom dnevno, uz mogućnost vraćanja
@@ -50,13 +51,14 @@ Zatim otvori `http://localhost:8080`. Service worker i instalacija rade na `loca
 
 - Podaci se čuvaju u `localStorage` pregledača na tvom uređaju.
 - Članovi domaćinstva su profili unutar aplikacije, a ne nalozi na serveru.
-- Za deljenje podataka između uređaja koristi **Podeli kopiju** i **Uvezi → spoji**.
+- Za deljenje podataka između uređaja uključi **Google Drive** u Podešavanjima (ili napravi rezervnu kopiju i vrati je na drugom uređaju).
+- Google Drive: aplikacija traži samo dozvolu za fajlove koje sama napravi (`drive.file`) — ne vidi ostale fajlove na tvom Drive-u. Podaci idu direktno sa uređaja na tvoj Drive, bez posrednika.
 - Redovno pravi rezervnu kopiju (izvoz). Brisanje podataka pregledača briše i podatke aplikacije.
 - OCR koristi [Tesseract.js](https://github.com/naptha/tesseract.js) učitan sa CDN-a; prvi put je potreban internet (jezički paket ~10 MB, zatim se pamti). Slika računa se obrađuje u pregledaču i ne šalje se nigde.
 
 ## Tehnologije
 
-HTML, CSS i JavaScript bez okvira, Service Worker, Web App Manifest, Web Share API, Notifications API, Tesseract.js (OCR).
+HTML, CSS i JavaScript bez okvira, Service Worker, Web App Manifest, Web Share API, Notifications API, Google Drive API (Google Identity Services), Tesseract.js (OCR).
 
 ## Autor
 
