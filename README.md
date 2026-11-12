@@ -6,6 +6,8 @@ Podaci se čuvaju na tvom uređaju, a po želji i na **tvom Google Drive-u**, pa
 
 **Otvori aplikaciju:** https://gembirdt-bit.github.io/atmosdom/
 
+> ☁️ **Novo u verziji 1.3: aplikacija se sada povezuje sa Google Drive-om!** Uključi u **Podešavanja → Google Drive → Poveži Google Drive** i tvoji podaci se čuvaju na tvom Google Drive-u i dele između svih tvojih uređaja (telefon, tablet, računar). Uputstvo je [ispod](#google-drive-sinhronizacija).
+
 ## Mogućnosti
 
 - **Računi** — struja, voda i komunalije, grejanje, gas, kirija / rata, internet / TV, telefon, pretplate, porezi, osiguranje, članarine, zdravlje i ostalo
