@@ -57,6 +57,10 @@ U **Podešavanja → Rezervna kopija**:
 
 ## Verzije
 
+### 1.3.4
+- Pri svakom pokretanju sa internetom učitava se najnovija verzija; provera nove verzije i kad se aplikacija vrati iz pozadine
+- U dnu aplikacije taster za Atmos servisnu knjižicu
+
 ### 1.3
 - **Google Drive sinhronizacija** između uređaja
 - Jednostavnija rezervna kopija: **Napravi** i **Vrati**; CSV i štampa su pod „Napredno“
