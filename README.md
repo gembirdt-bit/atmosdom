@@ -57,6 +57,9 @@ U **Podešavanja → Rezervna kopija**:
 
 ## Verzije
 
+### 1.3.6
+- Uklonjen taster „Proveri ažuriranje“ — provera ide sama
+
 ### 1.3.5
 - Brže otvaranje na slabom internetu: najviše 3 s čekanja na server, inače se otvara sačuvana verzija; lakša provera nove verzije
 
