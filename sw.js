@@ -1,4 +1,4 @@
-const CACHE = 'atmos-dom-v9';
+const CACHE = 'atmos-dom-v10';
 const ASSETS = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', e => {
@@ -17,19 +17,28 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
-  /* provera nove verzije traži sveže sa servera (cache: 'no-store' / 'reload'), pa ne sme da dobije staru kopiju iz keša */
-  if (req.cache === 'no-store' || req.cache === 'reload') return;
 
-  /* sama stranica: prvo mreža (pri svakom pokretanju najnovija verzija), keš samo kad nema interneta */
   if (req.mode === 'navigate') {
-    e.respondWith(
-      fetch(req, { cache: 'no-cache' }).then(res => {
+    /* stranica: prvo mreža (najnovija verzija), ali najviše 3 s — na slabom internetu otvara se sačuvana kopija,
+       a nova se preuzme u pozadini i stiže pri sledećem otvaranju. Bez interneta: odmah sačuvana kopija. */
+    e.respondWith((async () => {
+      const net = fetch(req, { cache: 'no-cache' }).then(res => {
         if (res && res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put('index.html', copy)); }
         return res;
-      }).catch(() => caches.match('index.html').then(r => r || caches.match('./')))
-    );
+      });
+      const saved = (await caches.match('index.html')) || (await caches.match('./'));
+      if (!saved) return net;
+      e.waitUntil(net.catch(() => {}));
+      return Promise.race([
+        net.then(res => (res && res.ok ? res : saved), () => saved),
+        new Promise(r => setTimeout(() => r(saved), 3000))
+      ]);
+    })());
     return;
   }
+
+  /* provera nove verzije traži sveže sa servera, pa ne sme da dobije staru kopiju iz keša */
+  if (req.cache === 'no-store' || req.cache === 'reload' || req.cache === 'no-cache') return;
 
   /* ostalo: iz keša, a u pozadini osvežava (radi i bez interneta) */
   e.respondWith(

@@ -57,6 +57,9 @@ U **Podešavanja → Rezervna kopija**:
 
 ## Verzije
 
+### 1.3.5
+- Brže otvaranje na slabom internetu: najviše 3 s čekanja na server, inače se otvara sačuvana verzija; lakša provera nove verzije
+
 ### 1.3.4
 - Pri svakom pokretanju sa internetom učitava se najnovija verzija; provera nove verzije i kad se aplikacija vrati iz pozadine
 - U dnu aplikacije taster za Atmos servisnu knjižicu
