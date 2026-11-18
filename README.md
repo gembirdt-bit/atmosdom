@@ -84,7 +84,7 @@ E-pošta: **vasserviserbgd@gmail.com**
 
 ## Autor
 
-**Gemb-Bit Željko Ilić** · [Sve Atmos aplikacije](https://gembirdt-bit.github.io/)
+**zeljkoracunariborca** · [Sve Atmos aplikacije](https://gembirdt-bit.github.io/)
 
 Aplikaciju možeš slobodno da koristiš. Ako praviš svoju verziju (clone), ostavi link ka autoru.
 
