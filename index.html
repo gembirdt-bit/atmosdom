@@ -192,7 +192,7 @@ const userOK=x=>db.filter==='all'||x.user===db.filter;
 const bAmt=b=>toBase(num(b.amount),b.cur);
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2600)}
 function download(name,text,mime){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:mime}));a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-const APP_VERSION='1.3.6',PRE='atmosDom1_preupdate';
+const APP_VERSION='1.3.7',PRE='atmosDom1_preupdate';
 const countAll=d=>d.users.length+d.bills.length+d.dates.length+d.notes.length+d.reminders.length;
 async function fetchRemoteVersion(){
   /* no-cache: server odgovori kratko „nije menjano“ (304) ako je stranica ista — ne preuzima se cela svaki put */
@@ -572,7 +572,7 @@ const GD_SCOPE='https://www.googleapis.com/auth/drive.file',GD_NAME='Atmos Dom �
 const GD_COLLS=['users','bills','dates','notes','reminders'];
 const GD_LOCAL=['theme','accent','fs','notif','lastNotif','backupDays','lastExport','snapKeep'];
 let gd=(()=>{try{const x=JSON.parse(localStorage.getItem(GD_KEY));if(x&&x.h)return x}catch{}return{on:false,fileId:'',h:{},last:0,err:'',email:''}})();
-let gdTok=(()=>{try{const t=JSON.parse(sessionStorage.getItem(GD_KEY+'_t'));if(t&&t.exp>Date.now()+60000)return t}catch{}return null})();
+let gdTok=(()=>{try{const t=JSON.parse(localStorage.getItem(GD_KEY+'_t'));if(t&&t.exp>Date.now()+60000)return t}catch{}return null})();
 let gdClient=null,gdBusy=false,gdT=null,gdWait=null;
 const gdStore=()=>{try{localStorage.setItem(GD_KEY,JSON.stringify(gd))}catch{}};
 const gdValid=()=>!!(gdTok&&gdTok.exp>Date.now()+60000);
@@ -586,14 +586,14 @@ async function gdAuth(consent){
   await gdLoadLib();
   return new Promise((res,rej)=>{
     if(!gdClient)gdClient=google.accounts.oauth2.initTokenClient({client_id:GD_CLIENT,scope:GD_SCOPE,callback:()=>{},error_callback:()=>{}});
-    gdClient.callback=r=>{if(r&&r.access_token){gdTok={t:r.access_token,exp:Date.now()+(Number(r.expires_in)||3600)*1000};try{sessionStorage.setItem(GD_KEY+'_t',JSON.stringify(gdTok))}catch{}res()}else rej(new Error((r&&r.error)||'Dozvola nije data'))};
+    gdClient.callback=r=>{if(r&&r.access_token){gdTok={t:r.access_token,exp:Date.now()+(Number(r.expires_in)||3600)*1000};try{localStorage.setItem(GD_KEY+'_t',JSON.stringify(gdTok))}catch{}res()}else rej(new Error((r&&r.error)||'Dozvola nije data'))};
     gdClient.error_callback=e=>rej(new Error(e&&e.type==='popup_closed'?'Prozor za prijavu je zatvoren':'Prijava na Google nije uspela'));
     gdClient.requestAccessToken({prompt:consent?'consent':'',hint:gd.email||undefined});
   });
 }
 async function gdApi(url,opt){
   const r=await fetch(url,Object.assign({},opt,{headers:Object.assign({Authorization:'Bearer '+gdTok.t},(opt&&opt.headers)||{})}));
-  if(r.status===401){gdTok=null;try{sessionStorage.removeItem(GD_KEY+'_t')}catch{}throw new Error('auth')}
+  if(r.status===401){gdTok=null;try{localStorage.removeItem(GD_KEY+'_t')}catch{}throw new Error('auth')}
   if(!r.ok)throw new Error('Drive greška '+r.status);
   return r;
 }
@@ -676,9 +676,34 @@ function gdMergeUsers(){
 function gdDisconnect(){
   if(!confirm('Prekinuti sinhronizaciju sa Google Drive-om? Podaci ostaju i na uređaju i na Drive-u.'))return;
   try{if(gdTok&&window.google&&google.accounts)google.accounts.oauth2.revoke(gdTok.t,()=>{})}catch{}
-  gdTok=null;try{sessionStorage.removeItem(GD_KEY+'_t')}catch{}
+  gdTok=null;try{localStorage.removeItem(GD_KEY+'_t')}catch{}
   gd={on:false,fileId:'',h:{},last:0,err:'',email:''};gdStore();render();toast('Veza sa Google Drive-om je prekinuta');
 }
+/* AUTOMATSKA SINHRONIZACIJA PO PALJENJU
+   Google dozvola traje oko sat vremena i čuva se na uređaju — aplikacija upaljena u tom roku sinhronizuje se odmah, sama.
+   Ako je dozvola istekla, obnavlja se sama na prvi dodir ekrana (pregledač dozvoljava Google prozor samo posle dodira),
+   pa se odmah sinhronizuje. Prozor se otvori i zatvori sam jer je dozvola već ranije data. */
+function gdAutoStart(){
+  if(!GD_CLIENT||!gd.on)return;
+  gdLoadLib().catch(()=>{});
+  if(gdValid()){gdSoon(1500);return}
+  gdArm();
+}
+function gdArm(){
+  if(gdArm.h||!gd.on)return;
+  gdArm.h=e=>{
+    if(!gd.on){gdDisarm();return}
+    if(gdValid()){gdDisarm();gdSoon(500);return}
+    const b=e.target&&e.target.closest&&e.target.closest('[data-act]');if(b&&/^gd/.test(b.dataset.act||''))return;   /* Drive dugmad rade sama */
+    if(typeof authState!=='undefined'&&(authState==='locked'||authState==='demo'))return;
+    if(!navigator.onLine||!(window.google&&google.accounts&&google.accounts.oauth2))return;
+    gdDisarm();gdAuth(false).then(()=>gdSync()).catch(()=>{});
+  };
+  document.addEventListener('click',gdArm.h,true);
+}
+function gdDisarm(){if(gdArm.h){document.removeEventListener('click',gdArm.h,true);gdArm.h=null}}
+/* povratak u aplikaciju iz pozadine */
+document.addEventListener('visibilitychange',()=>{if(document.hidden||!GD_CLIENT||!gd.on)return;if(gdValid()){if(Date.now()-(gd.last||0)>60000)gdSoon(1500)}else gdArm()});
 function gdCard(){
   if(!GD_CLIENT)return'';
   if(!gd.on)return`<div class="card"><h3>☁️ Google Drive</h3>
@@ -701,7 +726,7 @@ function gdStrip(){
 }
 setInterval(()=>{if(gd.on&&gdValid())gdSync()},5*60*1000);
 addEventListener('online',()=>gdSoon(2000));
-if(gd.on&&gdValid())setTimeout(()=>gdSync(),2500);
+setTimeout(gdAutoStart,1500);
 
 /* ---------- AKCIJE ---------- */
 document.addEventListener('click',e=>{
